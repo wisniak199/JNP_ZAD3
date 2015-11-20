@@ -1,11 +1,11 @@
 //plik naglowkowy
 
+#ifndef VERYLONGINT_H_
+#define VERYLONGINT_H_
+
 #include <vector>
 
 typedef vector<int> digit_list;
-
-#ifndef VERYLONGINT_H_
-#define VERYLONGINT_H_
 
 class VeryLongInt {
 private:
