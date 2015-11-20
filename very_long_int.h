@@ -5,7 +5,7 @@
 
 #include <vector>
 
-typedef vector<int> digit_list;
+typedef std::vector<int> digit_list;
 
 class VeryLongInt {
 private:
