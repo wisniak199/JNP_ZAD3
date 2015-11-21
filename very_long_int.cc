@@ -177,3 +177,17 @@ bool VeryLongInt::operator<=(const VeryLongInt &other) const {
 bool VeryLongInt::operator>=(const VeryLongInt &other) const {
 	return !((*this) < other);
 }
+
+std::ostream &VeryLongInt::write(std::ostream &os) const{
+    if (NaN)
+        os << "NaN";
+    else {
+        for (int i = digits.size() - 1; i >= 0; --i)
+            os << digits[i];
+    }
+    return os;
+}
+
+std::ostream &operator<<(std::ostream &os, const VeryLongInt &verylongint) {
+     return verylongint.write(os);
+}

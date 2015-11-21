@@ -38,6 +38,7 @@ public:
 	bool operator<=(const VeryLongInt &verylongint) const;
 	bool operator>(const VeryLongInt &verylongint) const;
 	bool operator>=(const VeryLongInt &verylongint) const;
+	std::ostream &write(std::ostream &os) const;
 };
 
 #endif /* VERYLONGINT_H_ */
