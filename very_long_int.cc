@@ -4,19 +4,18 @@
  *  Piotrek: kontruktory, (+, *, <<), BinaryDigits
  */
 
-// To CHYBA działa
 VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &denumerator){
- /*   VeryLongInt temp; = 1;
-    VeryLongInt one; = 1;
-    VeryLongInt quotient; = 0;
+ /*   VeryLongInt temp = 1;
+    VeryLongInt one = 1;
+    VeryLongInt quotient = 0;
 
     while ((*this) <= denumerator) {
-        denumerator <<= one;
-        temp <<= one;
+        denumerator <<= 1;
+        temp <<= 1;
     }
     while (temp > one) {
-        denumerator >>= one;
-        temp >>= one;
+        denumerator >>= 1;
+        temp >>= 1;
         if ((*this) >= denumerator) {
             (*this) -= denumerator;
             quotient += temp;
@@ -56,17 +55,17 @@ const VeryLongInt VeryLongInt::operator<<(const VeryLongInt &other) const {
 
 bool VeryLongInt::operator==(const VeryLongInt &other) const{
 
-	// return !(this < other) && !(other < this);
+	// return !((*this) < other) && !(other < (*this));
 
-/*	if ((*this).getlen() != other.getlen())
+	if ((*this).digits.size() != other.digits.size())
 		return false;
 	else{
-		unsigned long len = (*this).getlen();
+		unsigned long len = (*this).digits.size();
 		for (unsigned long i = 0; i < len; i++)
-			if ((*this).getdigits()[i] != other.getdigits()[i])
+			if ((*this).digits[i] != other.digits[i])
 				return false;
 		return true;
-	} */
+	}
 	return true;
 }
 

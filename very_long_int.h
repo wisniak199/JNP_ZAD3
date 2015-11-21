@@ -14,7 +14,6 @@ private:
 	bool Zero;
 public:
 	VeryLongInt();
-	~VeryLongInt();
 	VeryLongInt& operator+=(const VeryLongInt &verylongint);
 	VeryLongInt& operator-=(const VeryLongInt &verylongint);
 	VeryLongInt& operator*=(const VeryLongInt &verylongint);
