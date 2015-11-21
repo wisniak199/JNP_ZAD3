@@ -26,8 +26,16 @@ VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &denumerator){
     return *this;
 }
 
+const VeryLongInt VeryLongInt::operator+(const VeryLongInt &other) const {
+    return VeryLongInt(*this) += other;
+}
+
 const VeryLongInt VeryLongInt::operator-(const VeryLongInt &other) const {
     return VeryLongInt(*this) -= other;
+}
+
+const VeryLongInt VeryLongInt::operator*(const VeryLongInt &other) const {
+    return VeryLongInt(*this) *= other;
 }
 
 const VeryLongInt VeryLongInt::operator/(const VeryLongInt &other) const {
@@ -40,6 +48,10 @@ const VeryLongInt VeryLongInt::operator%(const VeryLongInt &other) const {
 
 const VeryLongInt VeryLongInt::operator>>(const VeryLongInt &other) const {
     return VeryLongInt(*this) >>= other;
+}
+
+const VeryLongInt VeryLongInt::operator<<(const VeryLongInt &other) const {
+    return VeryLongInt(*this) <<= other;
 }
 
 bool VeryLongInt::operator==(const VeryLongInt &other) const{
