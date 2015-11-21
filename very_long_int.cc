@@ -66,9 +66,39 @@ bool VeryLongInt::operator==(const VeryLongInt &other) const{
 				return false;
 		return true;
 	}
-	return true;
 }
 
 bool VeryLongInt::operator!=(const VeryLongInt &other) const{
 	return !(*this == other);
+}
+
+bool VeryLongInt::operator<(const VeryLongInt &other) const{
+	if ((*this).digits.size() < other.digits.size())
+		return true;
+	else if ((*this).digits.size() > other.digits.size())
+		return false;
+	else{
+		unsigned long i = (*this).digits.size() -1;
+		while (i >= 0 && (*this).digits[i] == other.digits[i])
+			i--;
+		if (i<0)
+			return false;
+		else {
+			if ((*this).digits[i] < other.digits[i])
+				return true;
+			return false;
+		}
+	}
+}
+
+bool VeryLongInt::operator>(const VeryLongInt &other) const{
+	return (other < (*this));
+}
+
+bool VeryLongInt::operator<=(const VeryLongInt &other) const{
+	return !((*this) > other);
+}
+
+bool VeryLongInt::operator>=(const VeryLongInt &other) const{
+	return !((*this) < other);
 }
