@@ -4,19 +4,44 @@
  *  Piotrek: kontruktory, (+, *, <<), BinaryDigits
  */
 
+VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other){
+	//Jezeli other > this return NaN!!!
+	//Jezeli other /= NaN return NaN
+	//Jezeli other = 0 return (*this) ?
+	long int c = 0; /*przeniesienie*/
+	for (long int i = 0; i < (*this).digits.size(); i++){
+		if (i < other.digits.size())
+			(*this).digits[i] = (*this).digits[i] - other.digits[i] +c;
+		else
+			(*this).digits[i] = (*this).digits[i] + c;
+		if ((*this).digits[i] < 0){
+			(*this).digits[i] += 1000000000; //TUTAJ BĘDZIE BAZA
+			c = -1;
+		}
+		else
+			c = 0;
+	}
+	/*Usuniecie wiodacych zer*/
+	while ((*this).digits.size() > 1 && (*this).digits[(*this).digits.size()){
+			(*this).digits.pop_back();
+		}
+	return *this;
+}
+
+
 VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &denumerator){
+	//jezeli denumerator = 0 return NaN!!!
  /*   VeryLongInt temp = 1;
     VeryLongInt one = 1;
     VeryLongInt quotient = 0;
-
-    while ((*this) <= denumerator) {
+    while ((*this) <= denumerator){
         denumerator <<= 1;
         temp <<= 1;
     }
-    while (temp > one) {
+    while (temp > one){
         denumerator >>= 1;
         temp >>= 1;
-        if ((*this) >= denumerator) {
+        if ((*this) >= denumerator){
             (*this) -= denumerator;
             quotient += temp;
         }
@@ -96,9 +121,9 @@ bool VeryLongInt::operator>(const VeryLongInt &other) const{
 }
 
 bool VeryLongInt::operator<=(const VeryLongInt &other) const{
-	return !(other > (*this))
+	return !((*this) > other);
 }
 
 bool VeryLongInt::operator>=(const VeryLongInt &other) const{
-	return !(other < (*this))
+	return !((*this) < other);
 }
