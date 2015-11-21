@@ -77,27 +77,37 @@ VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
 }
 
 VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
-	if (other.NaN || other.Zero)
+	/* VeryLongInt denominator = other;
+	if (denominator.NaN || denominator.Zero)
 		(*this) = NaN();
 	else {
- /*   VeryLongInt temp = 1;
-    VeryLongInt one = 1;
-    VeryLongInt quotient = 0;
-    while ((*this) <= denumerator){
-        denumerator <<= 1;
-        temp <<= 1;
-    }
-    while (temp > one){
-        denumerator >>= 1;
-        temp >>= 1;
-        if ((*this) >= denumerator){
-            (*this) -= denumerator;
-            quotient += temp;
-        }
-    }
-    return quotient; */
-    }
+    	VeryLongInt temp = VeryLongInt(1);
+   		VeryLongInt one = VeryLongInt(1);
+    	VeryLongInt quotient = VeryLongInt(0);
+    	while ((*this) <= denominator) {
+       		denominator <<= 1;
+       		temp <<= 1;
+    	}
+    	while (temp > one) {
+			denominator >>= 1;
+			temp >>= 1;
+			if ((*this) >= denominator){
+				(*this) -= denominator;
+				quotient += temp;
+        	}
+    	}
+    	*this = quotient;
+    } */
     return *this;
+}
+
+VeryLongInt& VeryLongInt::operator%=(const VeryLongInt &other) {
+	VeryLongInt quotient = *this;
+	quotient /= other; 
+	VeryLongInt product = other;
+	product *= quotient;
+	(*this) -= product;
+	return (*this);
 }
 
 const VeryLongInt VeryLongInt::operator+(const VeryLongInt &other) const {
@@ -178,7 +188,7 @@ bool VeryLongInt::operator>=(const VeryLongInt &other) const {
 	return !((*this) < other);
 }
 
-std::ostream &VeryLongInt::write(std::ostream &os) const{
+std::ostream &VeryLongInt::write(std::ostream &os) const {
     if (NaN)
         os << "NaN";
     else {
