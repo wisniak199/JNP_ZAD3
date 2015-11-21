@@ -4,7 +4,7 @@
 #define VERYLONGINT_H_
 
 #include <vector>
-
+#include <string>
 typedef std::vector<long int> digit_list;
 
 class VeryLongInt {
@@ -14,6 +14,10 @@ private:
 	bool Zero;
 public:
 	VeryLongInt();
+	VeryLongInt(const VeryLongInt &other);
+	VeryLongInt(VeryLongInt &&other);
+	VeryLongInt(unsigned int n);
+	VeryLongInt(const std::string &s);
 	VeryLongInt& operator+=(const VeryLongInt &verylongint);
 	VeryLongInt& operator-=(const VeryLongInt &verylongint);
 	VeryLongInt& operator*=(const VeryLongInt &verylongint);
