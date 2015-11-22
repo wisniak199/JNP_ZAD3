@@ -21,7 +21,7 @@ VeryLongInt::VeryLongInt(const VeryLongInt &other) : digits(other.digits), Zero(
 
 VeryLongInt::VeryLongInt(VeryLongInt &&other) : digits(std::move(other.digits)), Zero(other.Zero), NaN(other.NaN){}
 
-VeryLongInt::VeryLongInt(unsigned int n) {
+VeryLongInt::VeryLongInt(unsigned long int n) {
     NaN = false;
     if (n == 0) {
         Zero = true;
@@ -128,7 +128,7 @@ VeryLongInt& VeryLongInt::divide_by_2() {
 bool VeryLongInt::is_divisible_by_2() {
     if (NaN)
         return false;
-    return digit_list[0] % 2 == 0;
+    return digits[0] % 2 == 0;
 }
 
 //algorytm rosyjskich chlopow
@@ -176,6 +176,18 @@ VeryLongInt& VeryLongInt::operator%=(const VeryLongInt &other) {
 	product *= quotient;
 	(*this) -= product;
 	return (*this);
+}
+
+VeryLongInt& VeryLongInt::operator<<=(const unsigned int shift) {
+    for (auto i = 0; i < shift; ++i)
+        (*this).multiply_by_2();
+    return *this;
+}
+
+VeryLongInt& VeryLongInt::operator>>=(const unsigned int shift) {
+    for (auto i = 0; i < shift; ++i)
+        (*this).divide_by_2();
+    return *this;
 }
 
 const VeryLongInt VeryLongInt::operator+(const VeryLongInt &other) const {
