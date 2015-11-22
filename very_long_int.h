@@ -5,7 +5,7 @@
 
 #include <vector>
 #include <string>
-typedef std::vector<long int> digit_list;
+typedef std::vector<unsigned long int> digit_list;
 
 class VeryLongInt {
 private:

@@ -60,13 +60,14 @@ VeryLongInt& VeryLongInt::operator+=(const VeryLongInt &other){
     unsigned long int carry = 0;
     auto this_len = digits.size();
     auto other_len = other.digits.size();
-    for (auto i = 0; i < max(this_len, other_len); ++i) {
+    for (auto i = 0; i < std::max(this_len, other_len); ++i) {
         auto res = carry;
         if (i < other_len)
             res += other.digits[i];
-        if (i < this_len)
+        if (i < this_len) {
             res += digits[i];
             digits[i] = res % base;
+        }
         else
             digits.push_back(res % base);
         carry = res / base;
@@ -76,49 +77,63 @@ VeryLongInt& VeryLongInt::operator+=(const VeryLongInt &other){
     return *this;
 }
 
-VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other){
-	//Jezeli other > this return NaN!!!
-	//Jezeli other /= NaN return NaN
-	//Jezeli other = 0 return (*this) ?
-	long int c = 0; /*przeniesienie*/
-	for (long int i = 0; i < (*this).digits.size(); i++){
-		if (i < other.digits.size())
-			(*this).digits[i] = (*this).digits[i] - other.digits[i] +c;
-		else
-			(*this).digits[i] = (*this).digits[i] + c;
-		if ((*this).digits[i] < 0){
-			(*this).digits[i] += 1000000000; //TUTAJ BĘDZIE BAZA
-			c = -1;
+VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
+	if (other.NaN || (*this) < other)
+		(*this) = NaN();
+	else if (!other.Zero) {
+		long int c = 0; /*przeniesienie*/
+		for (long int i = 0; i < (*this).digits.size(); i++) {
+			if (i < other.digits.size())
+				(*this).digits[i] = (*this).digits[i] - other.digits[i] +c;
+			else
+				(*this).digits[i] = (*this).digits[i] + c;
+			if ((*this).digits[i] < 0) {
+				(*this).digits[i] += base;
+				c = -1;
+			}
+			else
+				c = 0;
 		}
-		else
-			c = 0;
-	}
-	/*Usuniecie wiodacych zer*/
-	while ((*this).digits.size() > 1 && (*this).digits[(*this).digits.size()-1] == 0){
+		/*Usuniecie wiodacych zer*/
+		while ((*this).digits.size() > 1 && (*this).digits[(*this).digits.size()-1] == 0) {
 			(*this).digits.pop_back();
 		}
+	}
 	return *this;
 }
 
-VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &denumerator){
-	//jezeli denumerator = 0 return NaN!!!
- /*   VeryLongInt temp = 1;
-    VeryLongInt one = 1;
-    VeryLongInt quotient = 0;
-    while ((*this) <= denumerator){
-        denumerator <<= 1;
-        temp <<= 1;
-    }
-    while (temp > one){
-        denumerator >>= 1;
-        temp >>= 1;
-        if ((*this) >= denumerator){
-            (*this) -= denumerator;
-            quotient += temp;
-        }
-    }
-    return quotient; */
+VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
+	/* VeryLongInt denominator = other;
+	if (denominator.NaN || denominator.Zero)
+		(*this) = NaN();
+	else {
+    	VeryLongInt temp = VeryLongInt(1);
+   		VeryLongInt one = VeryLongInt(1);
+    	VeryLongInt quotient = VeryLongInt(0);
+    	while ((*this) <= denominator) {
+       		denominator <<= 1;
+       		temp <<= 1;
+    	}
+    	while (temp > one) {
+			denominator >>= 1;
+			temp >>= 1;
+			if ((*this) >= denominator){
+				(*this) -= denominator;
+				quotient += temp;
+        	}
+    	}
+    	*this = quotient;
+    } */
     return *this;
+}
+
+VeryLongInt& VeryLongInt::operator%=(const VeryLongInt &other) {
+	VeryLongInt quotient = *this;
+	quotient /= other;
+	VeryLongInt product = other;
+	product *= quotient;
+	(*this) -= product;
+	return (*this);
 }
 
 const VeryLongInt VeryLongInt::operator+(const VeryLongInt &other) const {
@@ -149,13 +164,13 @@ const VeryLongInt VeryLongInt::operator<<(const VeryLongInt &other) const {
     return VeryLongInt(*this) <<= other;
 }
 
-bool VeryLongInt::operator==(const VeryLongInt &other) const{
+bool VeryLongInt::operator==(const VeryLongInt &other) const {
 
 	// return !((*this) < other) && !(other < (*this));
 
 	if ((*this).digits.size() != other.digits.size())
 		return false;
-	else{
+	else {
 		unsigned long len = (*this).digits.size();
 		for (unsigned long i = 0; i < len; i++)
 			if ((*this).digits[i] != other.digits[i])
@@ -164,16 +179,16 @@ bool VeryLongInt::operator==(const VeryLongInt &other) const{
 	}
 }
 
-bool VeryLongInt::operator!=(const VeryLongInt &other) const{
+bool VeryLongInt::operator!=(const VeryLongInt &other) const {
 	return !(*this == other);
 }
 
-bool VeryLongInt::operator<(const VeryLongInt &other) const{
+bool VeryLongInt::operator<(const VeryLongInt &other) const {
 	if ((*this).digits.size() < other.digits.size())
 		return true;
 	else if ((*this).digits.size() > other.digits.size())
 		return false;
-	else{
+	else {
 		unsigned long i = (*this).digits.size() -1;
 		while (i >= 0 && (*this).digits[i] == other.digits[i])
 			i--;
@@ -187,19 +202,19 @@ bool VeryLongInt::operator<(const VeryLongInt &other) const{
 	}
 }
 
-bool VeryLongInt::operator>(const VeryLongInt &other) const{
+bool VeryLongInt::operator>(const VeryLongInt &other) const {
 	return (other < (*this));
 }
 
-bool VeryLongInt::operator<=(const VeryLongInt &other) const{
+bool VeryLongInt::operator<=(const VeryLongInt &other) const {
 	return !((*this) > other);
 }
 
-bool VeryLongInt::operator>=(const VeryLongInt &other) const{
+bool VeryLongInt::operator>=(const VeryLongInt &other) const {
 	return !((*this) < other);
 }
 
-std::ostream &VeryLongInt::write(std::ostream &os) const{
+std::ostream &VeryLongInt::write(std::ostream &os) const {
     if (NaN)
         os << "NaN";
     else {
