@@ -80,7 +80,7 @@ VeryLongInt& VeryLongInt::operator+=(const VeryLongInt &other){
 VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
 	if (other.NaN || (*this) < other)
 		(*this) = NaN();
-	else if (!other.Zero) {
+	else if (!(*this).NaN && !(*this).NaN) {
 		long int c = 0; /*przeniesienie*/
 		for (long int i = 0; i < (*this).digits.size(); i++) {
 			if (i < other.digits.size())
@@ -144,37 +144,56 @@ VeryLongInt& VeryLongInt::operator*=(const VeryLongInt &other) {
     }
     return *this;
 }
+
 VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
-	/* VeryLongInt denominator = other;
-	if (denominator.NaN || denominator.Zero)
-		(*this) = NaN();
-	else {
-    	VeryLongInt temp = VeryLongInt(1);
-   		VeryLongInt one = VeryLongInt(1);
-    	VeryLongInt quotient = VeryLongInt(0);
-    	while ((*this) <= denominator) {
-       		denominator <<= 1;
-       		temp <<= 1;
-    	}
-    	while (temp > one) {
-			denominator >>= 1;
-			temp >>= 1;
-			if ((*this) >= denominator){
-				(*this) -= denominator;
-				quotient += temp;
-        	}
-    	}
-    	*this = quotient;
-    } */
+	if (other.NaN || other.Zero)
+		(*this)=NaN();
+	else if (!(*this).NaN && !(*this).NaN) {
+		if ((*this)<other)
+			(*this) = Zero();
+		else {
+			VeryLongInt quotient;
+			VeryLongInt dummy;
+			for (size_t i = other.digits.size() - 1; i >= 0; i--)
+				dummy.digits.push_back((*this).digits[(*this).digits.size()-1-i]);
+			size_t l = (*this).digits.size() - other.digits.size();;
+			while (l >= 0) {
+				unsigned long int a = 0;
+				unsigned long int b = base - 1;
+				while (a < b) {
+					unsigned long int c = ((a + b)/2) + 1;
+					if (other * VeryLongInt(c) > dummy)
+						b = c - 1; 
+					else
+						a = c;
+				}
+				if (quotient.Zero)
+					quotient = a;
+				else
+					quotient.digits.insert(quotient.digits.begin(), a); 
+				dummy = dummy - (other * VeryLongInt(a));
+				l--;
+				if (l >= 0)
+					dummy.digits.insert(dummy.digits.begin(), (*this).digits[l]);
+			}
+			while (quotient.digits.size() > 0 && quotient.digits[quotient.digits.size() - 1] == 0)
+				quotient.digits.pop_back();
+			*this = std::move(quotient);
+		}
+	}
     return *this;
 }
 
 VeryLongInt& VeryLongInt::operator%=(const VeryLongInt &other) {
-	VeryLongInt quotient = *this;
-	quotient /= other;
-	VeryLongInt product = other;
-	product *= quotient;
-	(*this) -= product;
+	if (other.NaN || other.Zero)
+		(*this)=NaN();
+	else if (!(*this).NaN && !(*this).NaN) {
+		VeryLongInt quotient = *this;
+		quotient /= other;
+		VeryLongInt product = other;
+		product *= quotient;
+		(*this) -= product;
+	}
 	return (*this);
 }
 
