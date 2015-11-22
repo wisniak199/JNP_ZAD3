@@ -51,6 +51,31 @@ VeryLongInt::VeryLongInt(const std::string &s) {
     }
 }
 
+VeryLongInt& VeryLongInt::operator+=(const VeryLongInt &other){
+    NaN = NaN || other.NaN;
+    Zero = Zero && other.Zero;
+    if (Zero || NaN)
+        return *this;
+
+    unsigned long int carry = 0;
+    auto this_len = digits.size();
+    auto other_len = other.digits.size();
+    for (auto i = 0; i < max(this_len, other_len); ++i) {
+        auto res = carry;
+        if (i < other_len)
+            res += other.digits[i];
+        if (i < this_len)
+            res += digits[i];
+            digits[i] = res % base;
+        else
+            digits.push_back(res % base);
+        carry = res / base;
+    }
+    if (carry != 0)
+        digits.push_back(carry);
+    return *this;
+}
+
 VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other){
 	//Jezeli other > this return NaN!!!
 	//Jezeli other /= NaN return NaN
