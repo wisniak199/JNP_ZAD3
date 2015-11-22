@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream>
 #include <sstream>
 #include "very_long_int.h"
 
@@ -7,8 +8,8 @@
  */
 
 //zmieniac 2 naraz
-const int base = 10;
-const int base_length = 1;
+const unsigned long int base = 100000;
+const int base_length = 5;
 
 
 VeryLongInt::VeryLongInt() {
@@ -17,9 +18,9 @@ VeryLongInt::VeryLongInt() {
     NaN = false;
 }
 
-VeryLongInt::VeryLongInt(const VeryLongInt &other) : digits(other.digits), Zero(other.Zero), NaN(other.NaN) {}
+VeryLongInt::VeryLongInt(const VeryLongInt &other) : digits(other.digits), NaN(other.NaN), Zero(other.Zero) {}
 
-VeryLongInt::VeryLongInt(VeryLongInt &&other) : digits(std::move(other.digits)), Zero(other.Zero), NaN(other.NaN){}
+VeryLongInt::VeryLongInt(VeryLongInt &&other) : digits(std::move(other.digits)), NaN(other.NaN), Zero(other.Zero){}
 
 VeryLongInt::VeryLongInt(unsigned long int n) {
     NaN = false;
@@ -41,10 +42,12 @@ VeryLongInt::VeryLongInt(const std::string &s) {
         Zero = true;
         digits.push_back(0);
     } else {
+        Zero = false;
         std::stringstream stream;
         for (int i = s.length() - base_length; i > -base_length; i -= base_length) {
-            stream.str(s.substr(std::max(0, i), i + base_length - 1));
-            int temp;
+            stream.clear();
+            stream.str(s.substr(std::max(0, i), base_length + std::min(0, i)));
+            unsigned long int temp;
             stream >> temp;
             digits.push_back(temp);
         }
@@ -58,10 +61,10 @@ VeryLongInt& VeryLongInt::operator+=(const VeryLongInt &other){
         return *this;
 
     unsigned long int carry = 0;
-    auto this_len = digits.size();
-    auto other_len = other.digits.size();
-    for (auto i = 0; i < std::max(this_len, other_len); ++i) {
-        auto res = carry;
+    size_t this_len = digits.size();
+    size_t other_len = other.digits.size();
+    for (size_t i = 0; i < std::max(this_len, other_len); ++i) {
+        unsigned long int res = carry;
         if (i < other_len)
             res += other.digits[i];
         if (i < this_len) {
@@ -81,7 +84,7 @@ VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
 	if (other.NaN || (*this) < other)
 		(*this) = NaN();
 	else if (!(*this).NaN && !(*this).NaN) {
-		long int c = 0; /*przeniesienie*/
+		long int c = 0; //przeniesienie
 		for (long int i = 0; i < (*this).digits.size(); i++) {
 			if (i < other.digits.size())
 				(*this).digits[i] = (*this).digits[i] - other.digits[i] +c;
@@ -94,7 +97,7 @@ VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
 			else
 				c = 0;
 		}
-		/*Usuniecie wiodacych zer*/
+		//Usuniecie wiodacych zer
 		while ((*this).digits.size() > 1 && (*this).digits[(*this).digits.size()-1] == 0) {
 			(*this).digits.pop_back();
 		}
@@ -102,6 +105,12 @@ VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
 	return *this;
 }
 
+void VeryLongInt::clear() {
+    digits.clear();
+    digits.push_back(0);
+    NaN = false;
+    Zero = true;
+}
 //mnozenie przez 2 - przda sie przy mnozeniu rosyjskich chlopow
 //nie wiem czy to dziala bo w koncu korzystamy jednoczesnie z tego samego obiektu
 //jezeli nie dzala takie cos to trzeba cos zrobic z dodawaniem
@@ -122,6 +131,8 @@ VeryLongInt& VeryLongInt::divide_by_2() {
             break;
         digits.pop_back();
     }
+    if (digits.size() == 1 && digits[0] == 0)
+        Zero = true;
     return *this;
 }
 
@@ -135,7 +146,8 @@ bool VeryLongInt::is_divisible_by_2() {
 VeryLongInt& VeryLongInt::operator*=(const VeryLongInt &other) {
     VeryLongInt multiplicator(other);
     VeryLongInt x(*this);
-    *this = VeryLongInt();
+    //*this = VeryLongInt();
+    (*this).clear();
     while (!multiplicator.Zero) {
         if (!multiplicator.is_divisible_by_2())
             *this += x;
@@ -163,14 +175,14 @@ VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
 				while (a < b) {
 					unsigned long int c = ((a + b)/2) + 1;
 					if (other * VeryLongInt(c) > dummy)
-						b = c - 1; 
+						b = c - 1;
 					else
 						a = c;
 				}
 				if (quotient.Zero)
 					quotient = a;
 				else
-					quotient.digits.insert(quotient.digits.begin(), a); 
+					quotient.digits.insert(quotient.digits.begin(), a);
 				dummy = dummy - (other * VeryLongInt(a));
 				l--;
 				if (l >= 0)
@@ -287,12 +299,21 @@ bool VeryLongInt::operator>=(const VeryLongInt &other) const {
 	return !((*this) < other);
 }
 
+
 std::ostream &VeryLongInt::write(std::ostream &os) const {
     if (NaN)
         os << "NaN";
     else {
-        for (int i = digits.size() - 1; i >= 0; --i)
-            os << digits[i];
+        os << digits[digits.size() - 1];
+        for (int i = digits.size() - 2; i >= 0; --i) {
+            int base_temp = base / 10;
+            while (base_temp > digits[i]) {
+                os << "0";
+                base_temp /= 10;
+            }
+            if (digits[i] != 0)
+                os << digits[i];
+        }
     }
     return os;
 }
@@ -300,3 +321,15 @@ std::ostream &VeryLongInt::write(std::ostream &os) const {
 std::ostream &operator<<(std::ostream &os, const VeryLongInt &verylongint) {
      return verylongint.write(os);
 }
+
+using namespace std;
+
+int main() {
+    VeryLongInt x("10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    VeryLongInt y("99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999");
+    VeryLongInt z = x;
+    cout << (z += y) <<"\n";
+    //x.multiply_by_2();
+    cout << (y *= x);
+}
+

@@ -8,15 +8,15 @@
 typedef std::vector<unsigned long int> digit_list;
 
 class VeryLongInt {
-private:
+public:
 	digit_list digits;
 	bool NaN;
 	bool Zero;
-public:
+//public:
 	VeryLongInt();
 	VeryLongInt(const VeryLongInt &other);
 	VeryLongInt(VeryLongInt &&other);
-	VeryLongInt(unsigned int n);
+	VeryLongInt(unsigned long int n);
 	VeryLongInt(const std::string &s);
 	VeryLongInt& operator+=(const VeryLongInt &verylongint);
 	VeryLongInt& operator-=(const VeryLongInt &verylongint);
@@ -42,6 +42,7 @@ public:
 	VeryLongInt& divide_by_2();
 	bool is_divisible_by_2();
 	std::ostream &write(std::ostream &os) const;
+	void clear();
 };
 
 #endif /* VERYLONGINT_H_ */
