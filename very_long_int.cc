@@ -229,12 +229,12 @@ const VeryLongInt VeryLongInt::operator%(const VeryLongInt &other) const {
     return VeryLongInt(*this) %= other;
 }
 
-const VeryLongInt VeryLongInt::operator>>(const VeryLongInt &other) const {
-    return VeryLongInt(*this) >>= other;
+const VeryLongInt VeryLongInt::operator>>(const unsigned int shift) const {
+    return VeryLongInt(*this) >>= shift;
 }
 
-const VeryLongInt VeryLongInt::operator<<(const VeryLongInt &other) const {
-    return VeryLongInt(*this) <<= other;
+const VeryLongInt VeryLongInt::operator<<(const unsigned int shift) const {
+    return VeryLongInt(*this) <<= shift;
 }
 
 bool VeryLongInt::operator==(const VeryLongInt &other) const {
