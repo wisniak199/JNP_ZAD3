@@ -38,6 +38,9 @@ public:
 	bool operator<=(const VeryLongInt &verylongint) const;
 	bool operator>(const VeryLongInt &verylongint) const;
 	bool operator>=(const VeryLongInt &verylongint) const;
+	VeryLongInt& multiply_by_2();
+	VeryLongInt& divide_by_2();
+	bool is_divisible_by_2();
 	std::ostream &write(std::ostream &os) const;
 };
 

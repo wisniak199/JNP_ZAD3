@@ -102,6 +102,48 @@ VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
 	return *this;
 }
 
+//mnozenie przez 2 - przda sie przy mnozeniu rosyjskich chlopow
+//nie wiem czy to dziala bo w koncu korzystamy jednoczesnie z tego samego obiektu
+//jezeli nie dzala takie cos to trzeba cos zrobic z dodawaniem
+VeryLongInt& VeryLongInt::multiply_by_2() {
+    (*this) += *this;
+    return *this;
+}
+
+
+VeryLongInt& VeryLongInt::divide_by_2() {
+    for (int i = digits.size() - 1; i >= 0; --i) {
+        if (i > 0 && digits[i] % 2)
+            digits[i - 1] += base;
+        digits[i] /= 2;
+    }
+    for (int i  = digits.size() - 1; i > 0; --i) {
+        if (digits[i] != 0)
+            break;
+        digits.pop_back();
+    }
+    return *this;
+}
+
+bool VeryLongInt::is_divisible_by_2() {
+    if (NaN)
+        return false;
+    return digit_list[0] % 2 == 0;
+}
+
+//algorytm rosyjskich chlopow
+VeryLongInt& VeryLongInt::operator*=(const VeryLongInt &other) {
+    VeryLongInt multiplicator(other);
+    VeryLongInt x(*this);
+    *this = VeryLongInt();
+    while (!multiplicator.Zero) {
+        if (!multiplicator.is_divisible_by_2())
+            *this += x;
+        x.multiply_by_2();
+        multiplicator.divide_by_2();
+    }
+    return *this;
+}
 VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
 	/* VeryLongInt denominator = other;
 	if (denominator.NaN || denominator.Zero)
