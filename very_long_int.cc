@@ -196,28 +196,35 @@ VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
 		else {
 			VeryLongInt quotient;
 			VeryLongInt dummy;
-			for (size_t i = other.digits.size() - 1; i >= 0; i--)
-				dummy.digits.push_back((*this).digits[(*this).digits.size()-1-i]);
-			size_t l = (*this).digits.size() - other.digits.size();;
+			for (long int i = other.digits.size() - 1; i >= 0; i--) {
+				if (dummy.Zero)
+					dummy += VeryLongInt((*this).digits[(*this).digits.size()-1-i]);
+				else
+					dummy.digits.push_back((*this).digits[(*this).digits.size()-1-i]);
+				}
+			long int l = (*this).digits.size() - other.digits.size();
 			while (l >= 0) {
 				unsigned long int a = 0;
 				unsigned long int b = base - 1;
 				while (a < b) {
 					unsigned long int c = ((a + b)/2) + 1;
-					if (other * VeryLongInt(c) > dummy)
+					if ((other * VeryLongInt(c)) > dummy)
 						b = c - 1;
 					else
 						a = c;
 				}
 				if (quotient.Zero)
-					quotient += a;
+					quotient += VeryLongInt(a);
 				else
 					quotient.digits.insert(quotient.digits.begin(), a);
-				//dummy = dummy - (other * VeryLongInt(a));
 				dummy -= (other * VeryLongInt(a));
 				l--;
-				if (l >= 0)
-					dummy.digits.insert(dummy.digits.begin(), (*this).digits[l]);
+				if (l >= 0) {
+					if (dummy.Zero)
+						dummy += (*this).digits[l];
+					else
+						dummy.digits.insert(dummy.digits.begin(), (*this).digits[l]);
+				}
 			}
 			while (quotient.digits.size() > 0 && quotient.digits[quotient.digits.size() - 1] == 0)
 				quotient.digits.pop_back();
@@ -324,7 +331,10 @@ bool VeryLongInt::operator<(const VeryLongInt &other) const {
 }
 
 bool VeryLongInt::operator>(const VeryLongInt &other) const {
-	return (other < (*this));
+	if (*this == other)
+		return false;
+	else
+		return (other < (*this));
 }
 
 bool VeryLongInt::operator<=(const VeryLongInt &other) const {
@@ -447,7 +457,7 @@ int main() {
         for (int i = 1; i < N; ++i)
             x *= 2;
         assert(x.numberOfBinaryDigits() == N);
-    }*/
+    }
 
     {
         VeryLongInt x("1234567890123456789012345678901234567890");
@@ -461,7 +471,7 @@ int main() {
         assert(x == z);
     }
 
-    /*{
+    {
         VeryLongInt x(string("12345678"));
         VeryLongInt y(12345678);
         assert(x == y);
@@ -523,9 +533,9 @@ int main() {
     int i = h; // błąd kompilacji
 */
 
-    VeryLongInt x("999999999999999997");
-    VeryLongInt y(5);
-    assert(x + y == VeryLongInt("1000000000000000002"));
-    //cout << x + y;
+    VeryLongInt x("9999923473434");
+    VeryLongInt y(876876);
+    //assert(x + y == VeryLongInt("1000000000000000002"));
+    cout << "wynik :" << (x / y) << "\n";
 }
 
