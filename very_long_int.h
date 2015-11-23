@@ -17,9 +17,9 @@ public:
 	VeryLongInt(const VeryLongInt &other);
 	VeryLongInt(VeryLongInt &&other);
 	VeryLongInt(unsigned long int n);
-	explicit VeryLongInt(char n) = delete;
-	explicit VeryLongInt(bool n) = delete;
 	VeryLongInt(const std::string &s);
+    //VeryLongInt(const char n) = delete;
+	//VeryLongInt(const bool n) = delete;
 	VeryLongInt& operator+=(const VeryLongInt &verylongint);
 	VeryLongInt& operator-=(const VeryLongInt &verylongint);
 	VeryLongInt& operator*=(const VeryLongInt &verylongint);
@@ -43,6 +43,14 @@ public:
 	bool operator<=(const VeryLongInt &verylongint) const;
 	bool operator>(const VeryLongInt &verylongint) const;
 	bool operator>=(const VeryLongInt &verylongint) const;
+	explicit operator bool() const {
+	    return !Zero && !NaN;
+	}
+
+	const VeryLongInt& getZero() {
+	    return VeryLongInt();
+	}
+
 	bool isValid() const;
 	VeryLongInt& multiply_by_2();
 	VeryLongInt& divide_by_2();
