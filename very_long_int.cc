@@ -1,6 +1,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <cassert>
 #include "very_long_int.h"
 
 /** Magda: porownania, (-, /, >>, %), operatory
@@ -54,6 +55,24 @@ VeryLongInt::VeryLongInt(const std::string &s) {
     }
 }
 
+VeryLongInt& VeryLongInt::operator=(const VeryLongInt &other) {
+    if (this != &other) {
+        this->digits = digit_list(other.digits);
+        this->Zero = other.Zero;
+        this->NaN = other.NaN;
+    }
+    return *this;
+}
+
+VeryLongInt& VeryLongInt::operator=(VeryLongInt &&other) {
+    if(this != &other) {
+        this->digits = digit_list(std::move(other.digits));
+        this->Zero = other.Zero;
+        this->NaN = other.NaN;
+    }
+    return *this;
+}
+
 VeryLongInt& VeryLongInt::operator+=(const VeryLongInt &other){
     NaN = NaN || other.NaN;
     Zero = Zero && other.Zero;
@@ -82,7 +101,7 @@ VeryLongInt& VeryLongInt::operator+=(const VeryLongInt &other){
 
 VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
 	if (other.NaN || (*this) < other)
-		(*this) = NaN();
+		(*this).NaN = true;
 	else if (!(*this).NaN && !(*this).NaN) {
 		long int c = 0; //przeniesienie
 		for (long int i = 0; i < (*this).digits.size(); i++) {
@@ -101,6 +120,8 @@ VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
 		while ((*this).digits.size() > 1 && (*this).digits[(*this).digits.size()-1] == 0) {
 			(*this).digits.pop_back();
 		}
+		if (digits.size() == 1 && digits[0] == 0)
+		    Zero = true;
 	}
 	return *this;
 }
@@ -157,12 +178,13 @@ VeryLongInt& VeryLongInt::operator*=(const VeryLongInt &other) {
     return *this;
 }
 
+
 VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
 	if (other.NaN || other.Zero)
-		(*this)=NaN();
+		(*this).NaN = true;
 	else if (!(*this).NaN && !(*this).NaN) {
 		if ((*this)<other)
-			(*this) = Zero();
+			(*this).clear();
 		else {
 			VeryLongInt quotient;
 			VeryLongInt dummy;
@@ -180,10 +202,11 @@ VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
 						a = c;
 				}
 				if (quotient.Zero)
-					quotient = a;
+					quotient += a;
 				else
 					quotient.digits.insert(quotient.digits.begin(), a);
-				dummy = dummy - (other * VeryLongInt(a));
+				//dummy = dummy - (other * VeryLongInt(a));
+				dummy -= (other * VeryLongInt(a));
 				l--;
 				if (l >= 0)
 					dummy.digits.insert(dummy.digits.begin(), (*this).digits[l]);
@@ -198,7 +221,7 @@ VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
 
 VeryLongInt& VeryLongInt::operator%=(const VeryLongInt &other) {
 	if (other.NaN || other.Zero)
-		(*this)=NaN();
+		(*this).NaN = true;
 	else if (!(*this).NaN && !(*this).NaN) {
 		VeryLongInt quotient = *this;
 		quotient /= other;
@@ -218,6 +241,11 @@ VeryLongInt& VeryLongInt::operator<<=(const unsigned int shift) {
 VeryLongInt& VeryLongInt::operator>>=(const unsigned int shift) {
     for (auto i = 0; i < shift; ++i)
         (*this).divide_by_2();
+    return *this;
+}
+
+VeryLongInt& VeryLongInt::operator=(const unsigned long int n) {
+    *this = VeryLongInt(n);
     return *this;
 }
 
@@ -299,6 +327,9 @@ bool VeryLongInt::operator>=(const VeryLongInt &other) const {
 	return !((*this) < other);
 }
 
+bool VeryLongInt::isValid() const {
+    return !NaN;
+}
 
 std::ostream &VeryLongInt::write(std::ostream &os) const {
     if (NaN)
@@ -306,7 +337,7 @@ std::ostream &VeryLongInt::write(std::ostream &os) const {
     else {
         os << digits[digits.size() - 1];
         for (int i = digits.size() - 2; i >= 0; --i) {
-            int base_temp = base / 10;
+            unsigned long int base_temp = base / 10;
             while (base_temp > digits[i]) {
                 os << "0";
                 base_temp /= 10;
@@ -325,11 +356,154 @@ std::ostream &operator<<(std::ostream &os, const VeryLongInt &verylongint) {
 using namespace std;
 
 int main() {
-    VeryLongInt x("10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-    VeryLongInt y("99999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999");
-    VeryLongInt z = x;
-    cout << (z += y) <<"\n";
-    //x.multiply_by_2();
-    cout << (y *= x);
+//    ==== Przykład kodu korzystającego z klasy VeryLongInt ====
+
+    {
+        VeryLongInt x = 1;
+        x /= 0;
+        assert(!x.isValid());
+    }
+
+    {
+        VeryLongInt x = 100;
+        x -= 101;
+        assert(!x.isValid());
+    }
+
+    {
+        VeryLongInt x = 23;
+        VeryLongInt y = x;
+        assert(x == y);
+    }
+
+    {
+        VeryLongInt x = 23;
+        VeryLongInt y = 32;
+        x = y;
+        assert(x == y);
+    }
+
+    {
+        VeryLongInt x = 23;
+        VeryLongInt y = 32;
+        assert(y > x);
+    }
+
+    {
+        VeryLongInt x = 23;
+        VeryLongInt y = 32;
+        assert(y >= x);
+    }
+
+    {
+        VeryLongInt x = NaN();
+        assert(!x.isValid());
+    }
+
+    {
+        VeryLongInt x = 10;
+        if (x)
+            assert(1);
+        else
+            assert(0);
+    }
+
+    {
+        VeryLongInt x = 1;
+        x <<= 123;
+        x >>= 120;
+        assert(8 == x);
+    }
+
+    {
+        VeryLongInt x = 1;
+        for (int i = 1; i <= 100; ++i)
+            x *= 2;
+        assert(x % 3 == 1);
+    }
+
+    {
+        VeryLongInt x = Zero();
+        assert(x == 0);
+    }
+
+    {
+        const int N = 100;
+        VeryLongInt x = 1;
+        for (int i = 1; i < N; ++i)
+            x *= 2;
+        assert(x.numberOfBinaryDigits() == N);
+    }
+
+    {
+        VeryLongInt x("1234567890123456789012345678901234567890");
+        VeryLongInt z = x;
+        VeryLongInt y("777777777777777777777777777777777777777");
+        x = x + y;
+        x -= y;
+        assert(x == z);
+    }
+
+    {
+        VeryLongInt x(string("12345678"));
+        VeryLongInt y(12345678U);
+        assert(x == y);
+    }
+
+    {
+        VeryLongInt x("12345678901234567890");
+        VeryLongInt y(12345678901234567890UL);
+        assert(x == y);
+        cout << y << endl;
+    }
+
+    {
+        VeryLongInt x("1234567890123456789012345678901234567890");
+        VeryLongInt y("1204567890123456789012345678901234567890");
+        VeryLongInt z(  "30000000000000000000000000000000000000");
+        assert(z == x - y);
+    }
+
+    {
+        VeryLongInt x("10000000000");
+        VeryLongInt y("100000000000");
+        VeryLongInt z("1000000000000000000000");
+        assert(z == x * y);
+    }
+
+    {
+        const int N = 1000;
+        VeryLongInt x = 1;
+        for (int i = 2; i <= N; ++i)
+
+            x *= i;
+        for (int i = 2; i <= N; ++i)
+            x /= i;
+        assert(x == 1);
+    }
+
+    {
+        assert(Zero().numberOfBinaryDigits() == 1);
+        assert(NaN().numberOfBinaryDigits() == 0);
+    }
+
+//==== Przykład kodu, który nie powinien się kompilować ====
+
+    /*VeryLongInt a('1'); // błąd kompilacji
+
+    VeryLongInt b(true); // błąd kompilacji
+
+    VeryLongInt c;
+    c += "123"; // błąd kompilacji
+
+    VeryLongInt d;
+    d -= ::std::string("123"); // błąd kompilacji
+
+    VeryLongInt e, f, g;
+    e * g = h; // błąd kompilacji
+
+    VeryLongInt h;
+    int i = h; // błąd kompilacji
+*/
 }
 
