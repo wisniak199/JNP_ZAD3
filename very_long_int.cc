@@ -176,7 +176,6 @@ VeryLongInt& VeryLongInt::operator*=(const VeryLongInt &other) {
     return *this;
 }
 
-
 VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
 	if (other.NaN || other.Zero)
 		NaN = true;
@@ -187,11 +186,14 @@ VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
 			VeryLongInt quotient;
 			VeryLongInt dummy;
 			for (long long int i = other.digits.size() - 1; i >= 0; i--) {
-				if (dummy.Zero)
-					dummy += VeryLongInt(digits[digits.size()-1-i]);
-				else
+				if (dummy.Zero) {
+					dummy.Zero = false;
+					dummy.digits[0] = digits[digits.size()-1-i];
+				}
+				else {
 					dummy.digits.push_back(digits[digits.size()-1-i]);
 				}
+			}
 			long long int l = digits.size() - other.digits.size();
 			while (l >= 0) {
 				unsigned long int a = 0;
@@ -203,18 +205,23 @@ VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
 					else
 						a = c;
 				}
-				if (quotient.Zero)
-					quotient += VeryLongInt(a);
-				else
+				if (quotient.Zero) {
+					quotient.Zero = false;
+					quotient.digits[0] = a;
+				}
+				else {
 					quotient.digits.insert(quotient.digits.begin(), a);
+				}
 				dummy -= (other * VeryLongInt(a));
 				l--;
-				if (l >= 0) {
-					if (dummy.Zero)
-						dummy += (*this).digits[l];
-					else
-						dummy.digits.insert(dummy.digits.begin(), (*this).digits[l]);
-				}
+				if (l >= 0) 
+					if (dummy.Zero) {
+						dummy.Zero = false;
+						dummy.digits[0] = digits[l];
+					}
+					else {
+						dummy.digits.insert(dummy.digits.begin(), digits[l]);
+					}
 			}
 			while (quotient.digits.size() > 0 && quotient.digits[quotient.digits.size() - 1] == 0)
 				quotient.digits.pop_back();
@@ -223,6 +230,7 @@ VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
 	}
     return *this;
 }
+
 
 VeryLongInt& VeryLongInt::operator%=(const VeryLongInt &other) {
 	if (other.NaN || other.Zero)
