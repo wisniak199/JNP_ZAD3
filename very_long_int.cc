@@ -279,6 +279,8 @@ const VeryLongInt VeryLongInt::operator<<(const unsigned int shift) const {
 }
 
 bool VeryLongInt::operator==(const VeryLongInt &other) const {
+    if (NaN || other.NaN)
+        return false;
 	if (digits.size() != other.digits.size())
 		return false;
 	else {
@@ -291,10 +293,14 @@ bool VeryLongInt::operator==(const VeryLongInt &other) const {
 }
 
 bool VeryLongInt::operator!=(const VeryLongInt &other) const {
+    if (NaN || other.NaN)
+        return false;
 	return !(*this == other);
 }
 
 bool VeryLongInt::operator<(const VeryLongInt &other) const {
+    if (NaN || other.NaN)
+        return false;
  	if (digits.size() < other.digits.size())
 		return true;
 	else if (digits.size() > other.digits.size())
@@ -315,6 +321,8 @@ bool VeryLongInt::operator<(const VeryLongInt &other) const {
 }
 
 bool VeryLongInt::operator>(const VeryLongInt &other) const {
+    if (NaN || other.NaN)
+        return false;
 	if (*this == other)
 		return false;
 	else
@@ -322,10 +330,14 @@ bool VeryLongInt::operator>(const VeryLongInt &other) const {
 }
 
 bool VeryLongInt::operator<=(const VeryLongInt &other) const {
+    if (NaN || other.NaN)
+        return false;
 	return !(*this > other);
 }
 
 bool VeryLongInt::operator>=(const VeryLongInt &other) const {
+    if (NaN || other.NaN)
+        return false;
 	return !(*this < other);
 }
 
@@ -413,8 +425,9 @@ bool operator==(const unsigned long int n, VeryLongInt& other) {
       //VeryLongInt x('a');
       VeryLongInt x(210000000);
       VeryLongInt y(38390241);
-      cout << x / y;
-
+      //cout << x / y;
+      char *b = NULL;
+      VeryLongInt a(b);
       //cout << x;
 
 //      Zero() += 1u;u
