@@ -33,20 +33,39 @@ VeryLongInt::VeryLongInt(unsigned long long n) {
     }
 }
 
-VeryLongInt::VeryLongInt(const std::string &s) {
+VeryLongInt::VeryLongInt(const char *c) {
     NaN = false;
-    if (s[0] == '0') {
-        Zero = true;
-        digits.push_back(0);
-    } else {
+    if (c == nullptr) {
         Zero = false;
-        std::stringstream stream;
-        for (int i = s.length() - base_length; i > -base_length; i -= base_length) {
-            stream.clear();
-            stream.str(s.substr(std::max(0, i), base_length + std::min(0, i)));
-            unsigned long int temp;
-            stream >> temp;
-            digits.push_back(temp);
+        NaN = true;
+    } else {
+        std::string s(c);
+        if (s.length() == 0)
+            NaN = true;
+        else if (s.length() > 1 && s[0] == '0')
+            NaN = true;
+        if (s[0] == '0') {
+            Zero = true;
+            digits.push_back(0);
+        } else {
+            for (char l : s) {
+                if (!isdigit(l)) {
+                    NaN = true;
+                    Zero = false;
+                    break;
+                }
+            }
+            if (!NaN){
+                Zero = false;
+                std::stringstream stream;
+                for (int i = s.length() - base_length; i > -base_length; i -= base_length) {
+                    stream.clear();
+                    stream.str(s.substr(std::max(0, i), base_length + std::min(0, i)));
+                    unsigned long int temp;
+                    stream >> temp;
+                    digits.push_back(temp);
+                }
+            }
         }
     }
 }
@@ -214,7 +233,7 @@ VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
 				}
 				dummy -= (other * VeryLongInt(a));
 				l--;
-				if (l >= 0) 
+				if (l >= 0)
 					if (dummy.Zero) {
 						dummy.Zero = false;
 						dummy.digits[0] = digits[l];
@@ -401,7 +420,6 @@ size_t VeryLongInt::numberOfBinaryDigits() const {
     using namespace std;
 
     const int MAXN = 50000000;
-
     unsigned long long randRange(unsigned long long a, unsigned long long b)
     {
       return a+rand()%(b-a+1);
@@ -409,9 +427,33 @@ size_t VeryLongInt::numberOfBinaryDigits() const {
 
     int main()
     {
+        VeryLongInt c(nullptr);
+        cout << c.isValid();
+        return 0;
       srand(time(NULL));
 
       int num_of_tests = 100000;
+      VeryLongInt x(210000000);
+      VeryLongInt y(38390241);
+      cout << x / y << "\n" <<210000000 / 38390241;
+
+        return 0;
+      while (num_of_tests--) {
+        unsigned long long a = randRange(0, MAXN);
+        unsigned long long b = randRange(1, a);
+        VeryLongInt x = VeryLongInt(a);
+        VeryLongInt y = VeryLongInt(b);
+        std::cout << "a " << a << "\n";
+        std::cout << "b " << b << "\n";
+        //std::cout << "a/b" << a / b << "\n";
+        assert(x + y == VeryLongInt(a+b));
+        assert(x - y == VeryLongInt(a-b));
+        assert(x * y == VeryLongInt(a*b));
+        assert(x / y == VeryLongInt(a/b));
+        assert(x % y == VeryLongInt(a%b));
+     }
+
+
 
       //////////////////////////////
          {
@@ -534,9 +576,9 @@ size_t VeryLongInt::numberOfBinaryDigits() const {
         for (int i = 2; i <= N; ++i)
 
             x *= i;
-        for (int i = 2; i <= N; ++i);
-            //x /= i;
-        //assert(x == 1);
+        for (int i = 2; i <= N; ++i)
+            x /= i;
+        assert(x == 1);
     }
 
     {
@@ -550,7 +592,6 @@ size_t VeryLongInt::numberOfBinaryDigits() const {
 
 //    VeryLongInt b(true); // błąd kompilacji
 
-    VeryLongInt c;
 //    c += "123"; // błąd kompilacji
 
     VeryLongInt d;
@@ -563,55 +604,6 @@ size_t VeryLongInt::numberOfBinaryDigits() const {
 //    int i = h; // błąd kompilacji
 
       //////////////////////////////
-
-        //Zero() += 5;
-      /*while (num_of_tests--) {
-        unsigned long long a = randRange(1, MAXN);
-        unsigned long long b = randRange(1, a - 1);
-        VeryLongInt x = VeryLongInt(std::max(a, b));
-        VeryLongInt y = VeryLongInt(std::min(a, b));
-
-      while (num_of_tests--) {
-        unsigned long long a = randRange(0, MAXN);
-        unsigned long long b = randRange(1, MAXN);
-        VeryLongInt x = VeryLongInt(a);
-        VeryLongInt y = VeryLongInt(b);
-
-      while (num_of_tests--) {
-        unsigned long long a = randRange(0, MAXN);
-        unsigned long long b = randRange(0, a);
-        VeryLongInt x = VeryLongInt(a);
-        VeryLongInt y = VeryLongInt(b);
-        std::cout << "a " << a << "\n";
-        std::cout << "b " << b << "\n";
-        //std::cout << "a/b" << a / b << "\n";
-        //x /= y;
-        //std::cout << "x/y" << x << "\n";
-        //assert(x / y == VeryLongInt(a/b));
-        assert(x + y == VeryLongInt(a + b));
-        assert(x - y == VeryLongInt(a - b));
-        assert(x * y == VeryLongInt(a * b));
-        //assert(x % y == VeryLongInt(a % b));
-     }*/
-      //VeryLongInt x('a');
-      //VeryLongInt x(210000000);
-      //VeryLongInt y(38390241);
-      //cout << x / y;
-      //char *b = NULL;
-      //VeryLongInt a(b);
-      //cout << x;
-
-//      Zero() += 1u;u
-      // x += 1u;
-      //cout << y.digits.size();
-      //x += 1;
-      //  VeryLongInt a, b, c;
-//        a * b += c;
-
-        //std::cout << "a/b" << a / b << "\n";
-       //x /= y;
-        //std::cout << "x/y" << x << "\n";
-        //assert(x == VeryLongInt(a/b));
 
 
       return 0;

@@ -24,8 +24,8 @@ public:
 	VeryLongInt(const long n) : VeryLongInt(static_cast<long long>(n)) {};
 	VeryLongInt(const int n) : VeryLongInt(static_cast<long long>(n)) {};
 	VeryLongInt(const short n) : VeryLongInt(static_cast<long long>(n)) {};
-    explicit VeryLongInt(const std::string &s);
-    explicit VeryLongInt(const char *s) : VeryLongInt(std::string(s)) {};
+    explicit VeryLongInt(const char *c);
+    explicit VeryLongInt(const std::string &s) : VeryLongInt(s.c_str()) {};
     VeryLongInt(const char n) = delete;
     VeryLongInt(const unsigned char n) = delete;
 	VeryLongInt(const bool n) = delete;
