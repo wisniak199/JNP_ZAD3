@@ -45,12 +45,18 @@ public:
 	//const VeryLongInt operator%(const VeryLongInt &verylongint) const;
 	const VeryLongInt operator<<(const unsigned int shift) const;
 	const VeryLongInt operator>>(const unsigned int shift) const;
-	bool operator==(const VeryLongInt &verylongint) const;
-	bool operator!=(const VeryLongInt &verylongint) const;
-	bool operator<(const VeryLongInt &verylongint) const;
-	bool operator<=(const VeryLongInt &verylongint) const;
-	bool operator>(const VeryLongInt &verylongint) const;
-	bool operator>=(const VeryLongInt &verylongint) const;
+	//bool operator==(const VeryLongInt &verylongint) const;
+	friend bool operator==(const VeryLongInt &verylongint1, const VeryLongInt &verylongint2);
+	//bool operator!=(const VeryLongInt &verylongint) const;
+	friend bool operator!=(const VeryLongInt &verylongint1, const VeryLongInt &verylongint2);
+	//bool operator<(const VeryLongInt &verylongint) const;
+	friend bool operator<(const VeryLongInt &verylongint1, const VeryLongInt &verylongint2);
+	//bool operator<=(const VeryLongInt &verylongint) const;
+	friend bool operator<=(const VeryLongInt &verylongint1, const VeryLongInt &verylongint2);
+	//bool operator>(const VeryLongInt &verylongint) const;
+	friend bool operator>(const VeryLongInt &verylongint1, const VeryLongInt &verylongint2);
+	//bool operator>=(const VeryLongInt &verylongint) const;
+	friend bool operator>=(const VeryLongInt &verylongint1, const VeryLongInt &verylongint2);
 	explicit operator bool() const {
 	    return !Zero && !NaN;
 	}
