@@ -23,7 +23,7 @@ VeryLongInt::VeryLongInt(const VeryLongInt &other) : digits(other.digits), NaN(o
 
 VeryLongInt::VeryLongInt(VeryLongInt &&other) : digits(std::move(other.digits)), NaN(other.NaN), Zero(other.Zero){}
 
-VeryLongInt::VeryLongInt(unsigned long int n) {
+VeryLongInt::VeryLongInt(unsigned long long n) {
     NaN = false;
     if (n == 0) {
         Zero = true;
@@ -130,7 +130,7 @@ VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
 			(*this).digits.pop_back();
 		}
 		if (digits.size() == 1 && digits[0] == 0)
-		    Zero = true; 
+		    Zero = true;
 	}
 	return *this;
 }
@@ -265,24 +265,24 @@ VeryLongInt& VeryLongInt::operator=(const unsigned long int n) {
     return *this;
 }
 
-const VeryLongInt VeryLongInt::operator+(const VeryLongInt &other) const {
-    return VeryLongInt(*this) += other;
+const VeryLongInt operator+(const VeryLongInt &a, const VeryLongInt &b) {
+    return VeryLongInt(a) += b;
 }
 
-const VeryLongInt VeryLongInt::operator-(const VeryLongInt &other) const {
-    return VeryLongInt(*this) -= other;
+const VeryLongInt operator-(const VeryLongInt &a, const VeryLongInt &b) {
+    return VeryLongInt(a) -= b;
 }
 
-const VeryLongInt VeryLongInt::operator*(const VeryLongInt &other) const {
-    return VeryLongInt(*this) *= other;
+const VeryLongInt operator*(const VeryLongInt &a, const VeryLongInt &b) {
+    return VeryLongInt(a) *= b;
 }
 
-const VeryLongInt VeryLongInt::operator/(const VeryLongInt &other) const {
-    return VeryLongInt(*this) /= other;
+const VeryLongInt operator/(const VeryLongInt &a, const VeryLongInt &b) {
+    return VeryLongInt(a) /= b;
 }
 
-const VeryLongInt VeryLongInt::operator%(const VeryLongInt &other) const {
-    return VeryLongInt(*this) %= other;
+const VeryLongInt operator%(const VeryLongInt &a, const VeryLongInt &b) {
+    return VeryLongInt(a) %= b;
 }
 
 const VeryLongInt VeryLongInt::operator>>(const unsigned int shift) const {
@@ -328,7 +328,7 @@ bool VeryLongInt::operator<(const VeryLongInt &other) const {
 				return true;
 			return false;
 		}
-	} 
+	}
 	return false;
 }
 
@@ -377,43 +377,60 @@ bool operator==(const unsigned long int n, VeryLongInt& other) {
     return other == n;
 }
 
-	
+
     #include "very_long_int.h"
     #include <iostream>
     #include <cassert>
     #include <cstdlib>
     #include <ctime>
-     
+
     using namespace std;
-     
-    const int MAXN = 50000;
-     
+
+    const int MAXN = 50000000;
+
     unsigned long long randRange(unsigned long long a, unsigned long long b)
     {
       return a+rand()%(b-a+1);
     }
-     
+
     int main()
     {
       srand(time(NULL));
-     
+
       int num_of_tests = 100000;
-     
-      while (num_of_tests--) {
-        unsigned long long a = randRange(0, MAXN);
-        unsigned long long b = randRange(1, MAXN);
-        VeryLongInt x = VeryLongInt(a);
-        VeryLongInt y = VeryLongInt(b);
+
+        //Zero() += 5;
+      /*while (num_of_tests--) {
+        unsigned long long a = randRange(1, MAXN);
+        unsigned long long b = randRange(1, a - 1);
+        VeryLongInt x = VeryLongInt(std::max(a, b));
+        VeryLongInt y = VeryLongInt(std::min(a, b));
+
         std::cout << "a " << a << "\n";
         std::cout << "b " << b << "\n";
-        std::cout << "a/b" << a / b << "\n";
-        x /= y;  
-        std::cout << "x/y" << x << "\n";
-        assert(x == VeryLongInt(a/b));
-     }
-     
-     
-     
+        //std::cout << "a/b" << a / b << "\n";
+        //x /= y;
+        //std::cout << "x/y" << x << "\n";
+        //assert(x / y == VeryLongInt(a/b));
+        assert(x + y == VeryLongInt(a + b));
+        assert(x - y == VeryLongInt(a - b));
+        assert(x * y == VeryLongInt(a * b));
+        //assert(x % y == VeryLongInt(a % b));
+     }*/
+      //VeryLongInt x('a');
+      VeryLongInt x(210000000);
+      VeryLongInt y(38390241);
+      cout << x / y;
+
+      //cout << x;
+
+//      Zero() += 1u;u
+      // x += 1u;
+      //cout << y.digits.size();
+      //x += 1;
+      //  VeryLongInt a, b, c;
+//        a * b += c;
+
       return 0;
     }
 
