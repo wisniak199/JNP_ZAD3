@@ -305,41 +305,41 @@ const VeryLongInt VeryLongInt::operator<<(const unsigned int shift) const {
     return VeryLongInt(*this) <<= shift;
 }
 
-bool VeryLongInt::operator==(const VeryLongInt &other) const {
-    if (NaN || other.NaN)
+bool operator==(const VeryLongInt &it, const VeryLongInt &other) {
+	if (it.NaN || other.NaN)
         return false;
-	if (digits.size() != other.digits.size())
+	if (it.digits.size() != other.digits.size())
 		return false;
 	else {
-		unsigned long len = digits.size();
+		unsigned long len = it.digits.size();
 		for (unsigned long i = 0; i < len; i++)
-			if (digits[i] != other.digits[i])
+			if (it.digits[i] != other.digits[i])
 				return false;
 		return true;
 	}
 }
 
-bool VeryLongInt::operator!=(const VeryLongInt &other) const {
-    if (NaN || other.NaN)
+bool operator!=(const VeryLongInt &it, const VeryLongInt &other) {
+    if (it.NaN || other.NaN)
         return false;
-	return !(*this == other);
+	return !(it == other);
 }
 
-bool VeryLongInt::operator<(const VeryLongInt &other) const {
-    if (NaN || other.NaN)
+bool operator<(const VeryLongInt &it, const VeryLongInt &other) {
+    if (it.NaN || other.NaN)
         return false;
- 	if (digits.size() < other.digits.size())
+ 	if (it.digits.size() < other.digits.size())
 		return true;
-	else if (digits.size() > other.digits.size())
+	else if (it.digits.size() > other.digits.size())
 		return false;
 	else {
-		long long i = digits.size() -1;
-		while (i >= 0 && digits[i] == other.digits[i])
+		long long i = it.digits.size() -1;
+		while (i >= 0 && it.digits[i] == other.digits[i])
 			i--;
 		if (i<0)
 			return false;
 		else {
-			if (digits[i] < other.digits[i])
+			if (it.digits[i] < other.digits[i])
 				return true;
 			return false;
 		}
@@ -347,25 +347,25 @@ bool VeryLongInt::operator<(const VeryLongInt &other) const {
 	return false;
 }
 
-bool VeryLongInt::operator>(const VeryLongInt &other) const {
-    if (NaN || other.NaN)
+bool operator>(const VeryLongInt &it, const VeryLongInt &other) {
+    if (it.NaN || other.NaN)
         return false;
-	if (*this == other)
+	if (it == other)
 		return false;
 	else
-		return (other < *this);
+		return (other < it);
 }
 
-bool VeryLongInt::operator<=(const VeryLongInt &other) const {
-    if (NaN || other.NaN)
+bool operator<=(const VeryLongInt &it, const VeryLongInt &other) {
+    if (it.NaN || other.NaN)
         return false;
-	return !(*this > other);
+	return !(it > other);
 }
 
-bool VeryLongInt::operator>=(const VeryLongInt &other) const {
-    if (NaN || other.NaN)
+bool operator>=(const VeryLongInt &it, const VeryLongInt &other) {
+    if (it.NaN || other.NaN)
         return false;
-	return !(*this < other);
+	return !(it < other);
 }
 
 bool VeryLongInt::isValid() const {
@@ -453,7 +453,27 @@ size_t VeryLongInt::numberOfBinaryDigits() const {
         assert(x % y == VeryLongInt(a%b));
      }
 
+      //VeryLongInt x('a')
 
+//      Zero() += 1u;u
+      // x += 1u;
+      //cout << y.digits.size();
+      //x += 1;
+      //  VeryLongInt a, b, c;
+//        a * b += c;
+      //VeryLongInt x('a');
+;
+      //cout << x / y;
+     // char *b = NULL;
+    //  VeryLongInt a(b);
+      //cout << x;
+
+//      Zero() += 1u;u
+      // x += 1u;
+      //cout << y.digits.size();
+      //x += 1;
+      //  VeryLongInt a, b, c;
+//        a * b += c;
 
       //////////////////////////////
          {
@@ -604,7 +624,14 @@ size_t VeryLongInt::numberOfBinaryDigits() const {
 //    int i = h; // błąd kompilacji
 
       //////////////////////////////
-
+        //std::cout << "a/b" << a / b << "\n";
+       x /= y;
+        std::cout << "x/y" << x << "\n";
+        //assert(x == VeryLongInt(a/b));
+        //std::cout << "a/b" << a / b << "\n";
+    //   x /= y;
+    //    std::cout << "x/y" << x << "\n";
+        //assert(x == VeryLongInt(a/b));
 
       return 0;
     }
