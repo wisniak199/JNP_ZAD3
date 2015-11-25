@@ -98,32 +98,32 @@ VeryLongInt& VeryLongInt::operator+=(const VeryLongInt &other){
 }
 
 VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
-	if (other.NaN || (*this) < other)
-		NaN = true;
-	else if (!NaN && !Zero) {
-		long int c = 0; //przeniesienie
-		long long temp = 0;
-		for (size_t i = 0; i < digits.size(); i++) {
-			if (i < other.digits.size())
-				temp = digits[i] - other.digits[i] + c;
-			else
-				temp = digits[i] + c;
-			if (temp < 0) {
-			    temp += base;
+    if (other.NaN || (*this) < other)
+        NaN = true;
+    else if (!NaN && !Zero) {
+        long int c = 0; //przeniesienie
+        long long temp = 0;
+        for (size_t i = 0; i < digits.size(); i++) {
+            if (i < other.digits.size())
+                temp = digits[i] - other.digits[i] + c;
+            else
+                temp = digits[i] + c;
+            if (temp < 0) {
+                temp += base;
                 c = -1;
-			}
-			else
-				c = 0;
+            }
+            else
+                c = 0;
             digits[i] = temp;
-		}
+        }
 
-		//Usuniecie wiodacych zer
-		while (digits.size() > 1 && digits[digits.size()-1] == 0)
-			digits.pop_back();
-		if (digits.size() == 1 && digits[0] == 0)
-		    Zero = true;
-	}
-	return *this;
+        //Usuniecie wiodacych zer
+        while (digits.size() > 1 && digits[digits.size()-1] == 0)
+            digits.pop_back();
+        if (digits.size() == 1 && digits[0] == 0)
+            Zero = true;
+    }
+    return *this;
 }
 
 void VeryLongInt::clear() {
@@ -179,69 +179,69 @@ VeryLongInt& VeryLongInt::operator*=(const VeryLongInt &other) {
 }
 
 VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
-	if (other.NaN || other.Zero)
-		NaN = true;
-	else if (!NaN && !Zero) {
-		if ((*this)<other)
-			(*this).clear();
-		else {
-			VeryLongInt quotient;
-			VeryLongInt dummy;
-			for (long long int i = other.digits.size() - 1; i >= 0; i--) {
-				if (dummy.Zero) {
-					dummy.Zero = false;
-					dummy.digits[0] = digits[digits.size()-1-i];
-				}
-				else {
-					dummy.digits.push_back(digits[digits.size()-1-i]);
-				}
-			}
-			long long int l = digits.size() - other.digits.size();
-			while (l >= 0) {
-				unsigned long int a = 0;
-				unsigned long int b = base - 1;
-				while (a < b) {
-					unsigned long int c = ((a + b)/2) + 1;
-					if ((other * VeryLongInt(c)) > dummy)
-						b = c - 1;
-					else
-						a = c;
-				}
-				if (quotient.Zero) {
-					quotient.Zero = false;
-					quotient.digits[0] = a;
-				}
-				else {
-					quotient.digits.insert(quotient.digits.begin(), a);
-				}
-				dummy -= (other * VeryLongInt(a));
-				l--;
-				if (l >= 0) {
-					if (dummy.Zero) {
-						dummy.Zero = false;
-						dummy.digits[0] = digits[l];
-					}
-					else {
-						dummy.digits.insert(dummy.digits.begin(), digits[l]);
-					}
-				}
-			}
-			while (quotient.digits.size() > 0 && quotient.digits[quotient.digits.size() - 1] == 0)
-				quotient.digits.pop_back();
-			*this = std::move(quotient);
-		}
-	}
+    if (other.NaN || other.Zero)
+        NaN = true;
+    else if (!NaN && !Zero) {
+        if ((*this)<other)
+            (*this).clear();
+        else {
+            VeryLongInt quotient;
+            VeryLongInt dummy;
+            for (long long int i = other.digits.size() - 1; i >= 0; i--) {
+                if (dummy.Zero) {
+                    dummy.Zero = false;
+                    dummy.digits[0] = digits[digits.size()-1-i];
+                }
+                else {
+                    dummy.digits.push_back(digits[digits.size()-1-i]);
+                }
+            }
+            long long int l = digits.size() - other.digits.size();
+            while (l >= 0) {
+                unsigned long int a = 0;
+                unsigned long int b = base - 1;
+                while (a < b) {
+                    unsigned long int c = ((a + b)/2) + 1;
+                    if ((other * VeryLongInt(c)) > dummy)
+                        b = c - 1;
+                    else
+                        a = c;
+                }
+                if (quotient.Zero) {
+                    quotient.Zero = false;
+                    quotient.digits[0] = a;
+                }
+                else {
+                    quotient.digits.insert(quotient.digits.begin(), a);
+                }
+                dummy -= (other * VeryLongInt(a));
+                l--;
+                if (l >= 0) {
+                    if (dummy.Zero) {
+                        dummy.Zero = false;
+                        dummy.digits[0] = digits[l];
+                    }
+                    else {
+                        dummy.digits.insert(dummy.digits.begin(), digits[l]);
+                    }
+                }
+            }
+            while (quotient.digits.size() > 0 && quotient.digits[quotient.digits.size() - 1] == 0)
+                quotient.digits.pop_back();
+            *this = std::move(quotient);
+        }
+    }
     return *this;
 }
 
 
 VeryLongInt& VeryLongInt::operator%=(const VeryLongInt &other) {
-	if (other.NaN || other.Zero)
-		(*this).NaN = true;
-	else if (!(*this).NaN && !(*this).NaN) {
-		*this = *this - (other * ((*this)/other));
-	}
-	return *this;
+    if (other.NaN || other.Zero)
+        (*this).NaN = true;
+    else if (!(*this).NaN && !(*this).NaN) {
+        *this = *this - (other * ((*this)/other));
+    }
+    return *this;
 }
 
 VeryLongInt& VeryLongInt::operator<<=(const unsigned int shift) {
@@ -290,66 +290,66 @@ const VeryLongInt VeryLongInt::operator<<(const unsigned int shift) const {
 }
 
 bool operator==(const VeryLongInt &it, const VeryLongInt &other) {
-	if (it.NaN || other.NaN)
+    if (it.NaN || other.NaN)
         return false;
-	if (it.digits.size() != other.digits.size())
-		return false;
-	else {
-		unsigned long len = it.digits.size();
-		for (unsigned long i = 0; i < len; i++)
-			if (it.digits[i] != other.digits[i])
-				return false;
-		return true;
-	}
+    if (it.digits.size() != other.digits.size())
+        return false;
+    else {
+        unsigned long len = it.digits.size();
+        for (unsigned long i = 0; i < len; i++)
+            if (it.digits[i] != other.digits[i])
+                return false;
+        return true;
+    }
 }
 
 bool operator!=(const VeryLongInt &it, const VeryLongInt &other) {
     if (it.NaN || other.NaN)
         return false;
-	return !(it == other);
+    return !(it == other);
 }
 
 bool operator<(const VeryLongInt &it, const VeryLongInt &other) {
     if (it.NaN || other.NaN)
         return false;
- 	if (it.digits.size() < other.digits.size())
-		return true;
-	else if (it.digits.size() > other.digits.size())
-		return false;
-	else {
-		long long i = it.digits.size() -1;
-		while (i >= 0 && it.digits[i] == other.digits[i])
-			i--;
-		if (i<0)
-			return false;
-		else {
-			if (it.digits[i] < other.digits[i])
-				return true;
-			return false;
-		}
-	}
-	return false;
+     if (it.digits.size() < other.digits.size())
+        return true;
+    else if (it.digits.size() > other.digits.size())
+        return false;
+    else {
+        long long i = it.digits.size() -1;
+        while (i >= 0 && it.digits[i] == other.digits[i])
+            i--;
+        if (i<0)
+            return false;
+        else {
+            if (it.digits[i] < other.digits[i])
+                return true;
+            return false;
+        }
+    }
+    return false;
 }
 
 bool operator>(const VeryLongInt &it, const VeryLongInt &other) {
     if (it.NaN || other.NaN)
         return false;
-	if (it == other)
-		return false;
-	else
-		return (other < it);
+    if (it == other)
+        return false;
+    else
+        return (other < it);
 }
 
 bool operator<=(const VeryLongInt &it, const VeryLongInt &other) {
     if (it.NaN || other.NaN)
         return false;
-	return !(it > other);
+    return !(it > other);
 }
 
 bool operator>=(const VeryLongInt &it, const VeryLongInt &other) {
     if (it.NaN || other.NaN)
         return false;
-	return !(it < other);
+    return !(it < other);
 }
 
 bool VeryLongInt::isValid() const {
