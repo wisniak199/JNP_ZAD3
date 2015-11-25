@@ -132,36 +132,6 @@ void VeryLongInt::clear() {
     NaN = false;
     Zero = true;
 }
-//mnozenie przez 2 - przda sie przy mnozeniu rosyjskich chlopow
-//nie wiem czy to dziala bo w koncu korzystamy jednoczesnie z tego samego obiektu
-//jezeli nie dzala takie cos to trzeba cos zrobic z dodawaniem
-VeryLongInt& VeryLongInt::multiply_by_2() {
-    (*this) += *this;
-    return *this;
-}
-
-
-VeryLongInt& VeryLongInt::divide_by_2() {
-    for (int i = digits.size() - 1; i >= 0; --i) {
-        if (i > 0 && digits[i] % 2)
-            digits[i - 1] += base;
-        digits[i] /= 2;
-    }
-    for (int i  = digits.size() - 1; i > 0; --i) {
-        if (digits[i] != 0)
-            break;
-        digits.pop_back();
-    }
-    if (digits.size() == 1 && digits[0] == 0)
-        Zero = true;
-    return *this;
-}
-
-bool VeryLongInt::is_divisible_by_2() const {
-    if (NaN)
-        return false;
-    return digits[0] % 2 == 0;
-}
 
 //algorytm rosyjskich chlopow
 VeryLongInt& VeryLongInt::operator*=(const VeryLongInt &other) {
@@ -253,11 +223,6 @@ VeryLongInt& VeryLongInt::operator<<=(const unsigned int shift) {
 VeryLongInt& VeryLongInt::operator>>=(const unsigned int shift) {
     for (size_t i = 0; i < shift; ++i)
         (*this).divide_by_2();
-    return *this;
-}
-
-VeryLongInt& VeryLongInt::operator=(const unsigned long int n) {
-    *this = VeryLongInt(n);
     return *this;
 }
 
@@ -356,6 +321,46 @@ bool VeryLongInt::isValid() const {
     return !NaN;
 }
 
+size_t VeryLongInt::numberOfBinaryDigits() const {
+    if (NaN)
+        return 0;
+    size_t res = 1;
+    VeryLongInt x = 2;
+    while (x - 1 < (*this)) {
+        res++;
+        x *= 2;
+    }
+    return res;
+}
+
+VeryLongInt& VeryLongInt::multiply_by_2() {
+    (*this) += *this;
+    return *this;
+}
+
+
+VeryLongInt& VeryLongInt::divide_by_2() {
+    for (int i = digits.size() - 1; i >= 0; --i) {
+        if (i > 0 && digits[i] % 2)
+            digits[i - 1] += base;
+        digits[i] /= 2;
+    }
+    for (int i  = digits.size() - 1; i > 0; --i) {
+        if (digits[i] != 0)
+            break;
+        digits.pop_back();
+    }
+    if (digits.size() == 1 && digits[0] == 0)
+        Zero = true;
+    return *this;
+}
+
+bool VeryLongInt::is_divisible_by_2() const {
+    if (NaN)
+        return false;
+    return digits[0] % 2 == 0;
+}
+
 std::ostream &VeryLongInt::write(std::ostream &os) const {
     if (NaN)
         os << "NaN";
@@ -374,23 +379,6 @@ std::ostream &VeryLongInt::write(std::ostream &os) const {
     return os;
 }
 
-bool operator==(const unsigned long int n, VeryLongInt& other) {
-    return other == n;
-}
-
-size_t VeryLongInt::numberOfBinaryDigits() const {
-    if (NaN)
-        return 0;
-    size_t res = 1;
-    VeryLongInt x = 2;
-    while (x - 1 < (*this)) {
-        res++;
-        x *= 2;
-    }
-    return res;
-}
-
-
     #include "very_long_int.h"
     #include <iostream>
     #include <cassert>
@@ -407,9 +395,10 @@ size_t VeryLongInt::numberOfBinaryDigits() const {
 
     /*int main()
     {
+        VeryLongInt p;
+        p = 42;
         VeryLongInt c(nullptr);
         cout << c.isValid();
-        //return 0;
       srand(time(NULL));
 
       int num_of_tests = 100000;
@@ -439,4 +428,6 @@ size_t VeryLongInt::numberOfBinaryDigits() const {
         assert(x * y == VeryLongInt(a*b));
         assert(x / y == VeryLongInt(a/b));
         assert(x % y == VeryLongInt(a%b));
-     }*/
+     }
+    }*/
+

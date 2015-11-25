@@ -39,7 +39,6 @@ class VeryLongInt {
         VeryLongInt& operator>>=(const unsigned int shift);
         VeryLongInt& operator=(const VeryLongInt& other);
         VeryLongInt& operator=(VeryLongInt&& other);
-        VeryLongInt& operator=(const unsigned long int n);
         const VeryLongInt operator<<(const unsigned int shift) const;
         const VeryLongInt operator>>(const unsigned int shift) const;
         friend bool operator==(const VeryLongInt &verylongint1, const VeryLongInt &verylongint2);
