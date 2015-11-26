@@ -166,7 +166,6 @@ VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
 VeryLongInt& VeryLongInt::operator*=(const VeryLongInt &other) {
     VeryLongInt multiplicator(other);
     VeryLongInt x(*this);
-    //*this = VeryLongInt();
     (*this).clear();
     while (!multiplicator.Zero) {
         if (!multiplicator.is_divisible_by_2())
