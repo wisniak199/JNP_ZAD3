@@ -3,7 +3,7 @@
 #include "very_long_int.h"
 
  /**
-  * @info Konstruktor - tworzy dluga liczbe rowna zero.
+  * Konstruktor - tworzy dluga liczbe rowna zero.
   *
   */
 VeryLongInt::VeryLongInt() {
@@ -13,7 +13,7 @@ VeryLongInt::VeryLongInt() {
 }
 
  /**
-  * @info Konstruktor - tworzy dluga liczbe na podstawie nieujemnej liczby
+  * Konstruktor - tworzy dluga liczbe na podstawie nieujemnej liczby
   * calkowitej n.
   *
   */
@@ -32,7 +32,7 @@ VeryLongInt::VeryLongInt(unsigned long long n) {
 }
 
  /**
-  * @info Konstruktor - tworzy dluga liczbe na podstawie jej dziesietnego zapisu
+  * Konstruktor - tworzy dluga liczbe na podstawie jej dziesietnego zapisu
   * w lancuchu s
   *
   */
@@ -68,7 +68,7 @@ VeryLongInt::VeryLongInt(const std::string &s) {
 }
 
  /**
-  * @info Konstruktor kopiujacy.
+  * Konstruktor kopiujacy.
   *
   */
 VeryLongInt& VeryLongInt::operator=(const VeryLongInt &other) {
@@ -81,7 +81,7 @@ VeryLongInt& VeryLongInt::operator=(const VeryLongInt &other) {
 }
 
  /**
-  * @info Konstruktor przenoszacy.
+  * Konstruktor przenoszacy.
   *
   */
 VeryLongInt& VeryLongInt::operator=(VeryLongInt &&other) {
@@ -94,7 +94,7 @@ VeryLongInt& VeryLongInt::operator=(VeryLongInt &&other) {
 }
 
  /**
-  * @info Dodawanie dlugiej liczby od dlugiej liczby.
+  * Dodawanie dlugiej liczby od dlugiej liczby.
   * Dodawanie pisemne.
   *
   */
@@ -125,7 +125,7 @@ VeryLongInt& VeryLongInt::operator+=(const VeryLongInt &other){
 }
  
  /**
-  * @info Odejmowanie dlugiej liczby od dlugiej liczby.
+  * Odejmowanie dlugiej liczby od dlugiej liczby.
   * Odejmowanie pisemne.
   *
   */
@@ -159,7 +159,7 @@ VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
 }
 
  /**
-  * @info Mnozenie dlugiej liczby przez dluga liczbe. 
+  * Mnozenie dlugiej liczby przez dluga liczbe. 
   * Mnozenie algorytmem rosyjskich chlopow.
   * 
   */
@@ -177,7 +177,7 @@ VeryLongInt& VeryLongInt::operator*=(const VeryLongInt &other) {
 }
 
  /**
-  * @info Dzielenie dlugiej liczby przez dluga liczbe. 
+  * Dzielenie dlugiej liczby przez dluga liczbe. 
   * Dzielenie pisemne, rozwazamy pierwsze n cyfr dzielnej, gdzie n to liczba
   * cyfr dzielnika i dokonujemy dzielenia - wynik bedzie liczba jednocyfrowa. 
   * Wyszukujemy go binarnie.
@@ -241,7 +241,7 @@ VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
 }
 
  /**
-  * @info Obliczanie reszty z dzielenia dlugiej liczby przez dluga liczbe.
+  * Obliczanie reszty z dzielenia dlugiej liczby przez dluga liczbe.
   * Obliczana jako roznica dzielnej i iloczynu dzielnika i ilorazu.
   *
   */
@@ -255,7 +255,7 @@ VeryLongInt& VeryLongInt::operator%=(const VeryLongInt &other) {
 }
 
  /**
-  * @info Przesuniecie dlugiej liczby i bitów w lewo, gdzie i to wartosc 
+  * Przesuniecie dlugiej liczby i bitów w lewo, gdzie i to wartosc 
   * zmiennej shift.
   * Realizowane przez mnozenie razy dwa i razy.
   *
@@ -267,7 +267,7 @@ VeryLongInt& VeryLongInt::operator<<=(const unsigned int shift) {
 }
 
  /**
-  * @info Przesuniecie dlugiej liczby i bitów w prawo, gdzie i to wartosc 
+  * Przesuniecie dlugiej liczby i bitów w prawo, gdzie i to wartosc 
   * zmiennej shift.
   * Realizowane przez dzielenie przez dwa i razy.
   *
@@ -279,7 +279,7 @@ VeryLongInt& VeryLongInt::operator>>=(const unsigned int shift) {
 }
 
  /**
-  * @info Zwraca dluga liczbe bedaca wynikiem dodawania dlugiej liczby a do
+  * Zwraca dluga liczbe bedaca wynikiem dodawania dlugiej liczby a do
   * dlugiej liczby b.
   *
   */
@@ -288,7 +288,7 @@ const VeryLongInt operator+(const VeryLongInt &a, const VeryLongInt &b) {
 }
 
  /**
-  * @info Zwraca dluga liczbe bedaca wynikiem odejmowania dlugiej liczby b od
+  * Zwraca dluga liczbe bedaca wynikiem odejmowania dlugiej liczby b od
   * dlugiej liczby a.
   *
   */
@@ -297,7 +297,7 @@ const VeryLongInt operator-(const VeryLongInt &a, const VeryLongInt &b) {
 }
 
  /**
-  * @info Zwraca dluga liczbe bedaca wynikiem mnozenia dlugiej liczby a przez
+  * Zwraca dluga liczbe bedaca wynikiem mnozenia dlugiej liczby a przez
   * dluga liczbe b.
   *
   */
@@ -306,7 +306,7 @@ const VeryLongInt operator*(const VeryLongInt &a, const VeryLongInt &b) {
 }
 
  /**
-  * @info Zwraca dluga liczbe bedaca wynikiem dzielenia dlugiej liczby a przez
+  * Zwraca dluga liczbe bedaca wynikiem dzielenia dlugiej liczby a przez
   * dluga liczbe b.
   *
   */
@@ -315,7 +315,7 @@ const VeryLongInt operator/(const VeryLongInt &a, const VeryLongInt &b) {
 }
 
  /**
-  * @info Zwraca dluga liczbe bedaca reszta z dzielenia dlugiej liczby a przez
+  * Zwraca dluga liczbe bedaca reszta z dzielenia dlugiej liczby a przez
   * dluga liczbe b.
   *
   */
@@ -324,7 +324,7 @@ const VeryLongInt operator%(const VeryLongInt &a, const VeryLongInt &b) {
 }
 
  /**
-  * @info Zwraca wynik przesuniecia dlugiej liczby o i bitow w lewo, gdzie i 
+  * Zwraca wynik przesuniecia dlugiej liczby o i bitow w lewo, gdzie i 
   * to wartosc zmiennej shift.
   *
   */
@@ -333,7 +333,7 @@ const VeryLongInt VeryLongInt::operator<<(const unsigned int shift) const {
 }
  
   /**
-  * @info Zwraca wynik przesuniecia dlugiej liczby o i bitow w prawo, gdzie i 
+  * Zwraca wynik przesuniecia dlugiej liczby o i bitow w prawo, gdzie i 
   * to wartosc zmiennej shift.
   *
   */
@@ -342,7 +342,7 @@ const VeryLongInt VeryLongInt::operator>>(const unsigned int shift) const {
 }
 
  /**
-  * @info Zwraca wynik porownania "==" dwoch dlugich liczb 
+  * Zwraca wynik porownania "==" dwoch dlugich liczb 
   * i false, jesli choc jeden z argumentów jest NaN.
   *
   */
@@ -361,7 +361,7 @@ bool operator==(const VeryLongInt &it, const VeryLongInt &other) {
 }
 
  /**
-  * @info Zwraca wynik porownania "!=" dwoch dlugich liczb 
+  * Zwraca wynik porownania "!=" dwoch dlugich liczb 
   * i false, jesli choc jeden z argumentów jest NaN.
   *
   */
@@ -372,7 +372,7 @@ bool operator!=(const VeryLongInt &it, const VeryLongInt &other) {
 }
 
  /**
-  * @info Zwraca wynik porownania "<" dwoch dlugich liczb 
+  * Zwraca wynik porownania "<" dwoch dlugich liczb 
   * i false, jesli choc jeden z argumentów jest NaN.
   *
   */
@@ -399,7 +399,7 @@ bool operator<(const VeryLongInt &it, const VeryLongInt &other) {
 }
 
  /**
-  * @info Zwraca wynik porownania ">" dwoch dlugich liczb 
+  * Zwraca wynik porownania ">" dwoch dlugich liczb 
   * i false, jesli choc jeden z argumentów jest NaN.
   *
   */
@@ -413,7 +413,7 @@ bool operator>(const VeryLongInt &it, const VeryLongInt &other) {
 }
 
  /**
-  * @info Zwraca wynik porownania "<=" dwoch dlugich liczb 
+  * Zwraca wynik porownania "<=" dwoch dlugich liczb 
   * i false, jesli choc jeden z argumentów jest NaN.
   *
   */
@@ -424,7 +424,7 @@ bool operator<=(const VeryLongInt &it, const VeryLongInt &other) {
 }
 
  /**
-  * @info Zwraca wynik porownania "=>" dwoch dlugich liczb 
+  * Zwraca wynik porownania "=>" dwoch dlugich liczb 
   * i false, jesli choc jeden z argumentów jest NaN.
   *
   */
@@ -435,7 +435,7 @@ bool operator>=(const VeryLongInt &it, const VeryLongInt &other) {
 }
 
  /**
-  * @info Zwraca false wtedy i tylko wtedy, gdy dluga liczba jest nieliczba.
+  * Zwraca false wtedy i tylko wtedy, gdy dluga liczba jest nieliczba.
   *
   */
 bool VeryLongInt::isValid() const {
@@ -443,7 +443,7 @@ bool VeryLongInt::isValid() const {
 }
 
  /**
-  * @info Zwraca liczbe cyfr w zapisie dwojkowym dlugiej liczby.
+  * Zwraca liczbe cyfr w zapisie dwojkowym dlugiej liczby.
   *
   */
 size_t VeryLongInt::numberOfBinaryDigits() const {
@@ -459,7 +459,7 @@ size_t VeryLongInt::numberOfBinaryDigits() const {
 }
 
  /**
-  * @info Funkcja pomocnicza - zeruje dluga liczbe.
+  * Zeruje dluga liczbe.
   *
   */
 void VeryLongInt::clear() {
@@ -470,7 +470,7 @@ void VeryLongInt::clear() {
 }
 
  /**
-  * @info Funkcja pomocnicza realizujaca mnozenie dlugiej liczby przez dwa.
+  * Funkcja pomocnicza realizujaca mnozenie dlugiej liczby przez dwa.
   *
   */
 VeryLongInt& VeryLongInt::multiply_by_2() {
@@ -479,7 +479,7 @@ VeryLongInt& VeryLongInt::multiply_by_2() {
 }
 
  /**
-  * @info Funkcja pomocnicza realizujaca dzielenie dlugiej liczby przez dwa.
+  * Funkcja pomocnicza realizujaca dzielenie dlugiej liczby przez dwa.
   *
   */
 VeryLongInt& VeryLongInt::divide_by_2() {
@@ -499,7 +499,7 @@ VeryLongInt& VeryLongInt::divide_by_2() {
 }
 
  /**
-  * @info Funkcja pomocnicza zwaracajaca true, gdy dluga liczba jest podzielna
+  * Funkcja pomocnicza zwaracajaca true, gdy dluga liczba jest podzielna
   * przez dwa, false w przeciwnym przypadku.
   *
   */
@@ -510,7 +510,7 @@ bool VeryLongInt::is_divisible_by_2() const {
 }
 
  /** 
-  * @info Funkcja pomocnicza do wypisywania dlugiej liczby w zapisie dziesietnym 
+  * Funkcja pomocnicza do wypisywania dlugiej liczby w zapisie dziesietnym 
   * na strumien os (NaN, jesli dluga liczba jest nieliczba).
   *
   */
@@ -531,4 +531,3 @@ std::ostream &VeryLongInt::write(std::ostream &os) const {
     }
     return os;
 }
-
