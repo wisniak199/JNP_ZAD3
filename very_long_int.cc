@@ -2,12 +2,21 @@
 #include <sstream>
 #include "very_long_int.h"
 
+ /**
+  * @info Konstruktor - tworzy dluga liczbe rowna zero.
+  *
+  */
 VeryLongInt::VeryLongInt() {
     digits = digit_list({0L});
     Zero = true;
     NaN = false;
 }
 
+ /**
+  * @info Konstruktor - tworzy dluga liczbe na podstawie nieujemnej liczby
+  * calkowitej n.
+  *
+  */
 VeryLongInt::VeryLongInt(unsigned long long n) {
     NaN = false;
     if (n == 0) {
@@ -22,6 +31,11 @@ VeryLongInt::VeryLongInt(unsigned long long n) {
     }
 }
 
+ /**
+  * @info Konstruktor - tworzy dluga liczbe na podstawie jej dziesietnego zapisu
+  * w lancuchu s
+  *
+  */
 VeryLongInt::VeryLongInt(const std::string &s) {
     NaN = false;
     if (s.length() == 0)
@@ -53,6 +67,10 @@ VeryLongInt::VeryLongInt(const std::string &s) {
     }
 }
 
+ /**
+  * @info Konstruktor kopiujacy.
+  *
+  */
 VeryLongInt& VeryLongInt::operator=(const VeryLongInt &other) {
     if (this != &other) {
         this->digits = digit_list(other.digits);
@@ -62,6 +80,10 @@ VeryLongInt& VeryLongInt::operator=(const VeryLongInt &other) {
     return *this;
 }
 
+ /**
+  * @info Konstruktor przenoszacy.
+  *
+  */
 VeryLongInt& VeryLongInt::operator=(VeryLongInt &&other) {
     if(this != &other) {
         this->digits = digit_list(std::move(other.digits));
@@ -71,6 +93,11 @@ VeryLongInt& VeryLongInt::operator=(VeryLongInt &&other) {
     return *this;
 }
 
+ /**
+  * @info Dodawanie dlugiej liczby od dlugiej liczby.
+  * Dodawanie pisemne.
+  *
+  */
 VeryLongInt& VeryLongInt::operator+=(const VeryLongInt &other){
     NaN = NaN || other.NaN;
     Zero = Zero && other.Zero;
@@ -96,7 +123,12 @@ VeryLongInt& VeryLongInt::operator+=(const VeryLongInt &other){
         digits.push_back(carry);
     return *this;
 }
-
+ 
+ /**
+  * @info Odejmowanie dlugiej liczby od dlugiej liczby.
+  * Odejmowanie pisemne.
+  *
+  */
 VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
     if (other.NaN || (*this) < other)
         NaN = true;
@@ -126,6 +158,10 @@ VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
     return *this;
 }
 
+ /**
+  * @info Funkcja pomocnicza - zeruje dluga liczbe.
+  *
+  */
 void VeryLongInt::clear() {
     digits.clear();
     digits.push_back(0);
@@ -133,7 +169,11 @@ void VeryLongInt::clear() {
     Zero = true;
 }
 
-//algorytm rosyjskich chlopow
+ /**
+  * @info Mnozenie dlugiej liczby przez dluga liczbe. 
+  * Mnozenie algorytmem rosyjskich chlopow.
+  * 
+  */
 VeryLongInt& VeryLongInt::operator*=(const VeryLongInt &other) {
     VeryLongInt multiplicator(other);
     VeryLongInt x(*this);
@@ -148,6 +188,14 @@ VeryLongInt& VeryLongInt::operator*=(const VeryLongInt &other) {
     return *this;
 }
 
+ /**
+  * @info Dzielenie dlugiej liczby przez dluga liczbe. 
+  * Dzielenie pisemne, rozwazamy pierwsze n cyfr dzielnej, gdzie n to liczba
+  * cyfr dzielnika i dokonujemy dzielenia - wynik bedzie liczba jednocyfrowa. 
+  * Wyszukujemy go binarnie.
+  * Nastepnie dopisujemy (n+1) cyfre do reszty z dzielenia i powtarzamy proces.
+  * 
+  */
 VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
     if (other.NaN || other.Zero)
         NaN = true;
@@ -204,56 +252,112 @@ VeryLongInt& VeryLongInt::operator/=(const VeryLongInt &other) {
     return *this;
 }
 
-
+ /**
+  * @info Obliczanie reszty z dzielenia dlugiej liczby przez dluga liczbe.
+  * Obliczana jako roznica dzielnej i iloczynu dzielnika i ilorazu.
+  *
+  */
 VeryLongInt& VeryLongInt::operator%=(const VeryLongInt &other) {
     if (other.NaN || other.Zero)
-        (*this).NaN = true;
-    else if (!(*this).NaN && !(*this).NaN) {
+        NaN = true;
+    else if (!NaN && !Zero) {
         *this = *this - (other * ((*this)/other));
     }
     return *this;
 }
 
+ /**
+  * @info Przesuniecie dlugiej liczby i bitów w lewo. Gdzie i to wartosc 
+  * zmiennej shift.
+  * Realizowane przez mnozenie razy dwa i razy.
+  *
+  */
 VeryLongInt& VeryLongInt::operator<<=(const unsigned int shift) {
     for (size_t i = 0; i < shift; ++i)
         (*this).multiply_by_2();
     return *this;
 }
 
+ /**
+  * @info Przesuniecie dlugiej liczby i bitów w prawo. Gdzie i to wartosc 
+  * zmiennej shift.
+  * Realizowane przez dzielenie przez dwa i razy.
+  *
+  */
 VeryLongInt& VeryLongInt::operator>>=(const unsigned int shift) {
     for (size_t i = 0; i < shift; ++i)
         (*this).divide_by_2();
     return *this;
 }
 
+ /**
+  * @info Zwraca dluga liczbe bedaca wynikiem dodawania dlugiej liczby a do
+  * dlugiej liczby b.
+  *
+  */
 const VeryLongInt operator+(const VeryLongInt &a, const VeryLongInt &b) {
     return VeryLongInt(a) += b;
 }
 
+ /**
+  * @info Zwraca dluga liczbe bedaca wynikiem odejmowania dlugiej liczby b od
+  * dlugiej liczby a.
+  *
+  */
 const VeryLongInt operator-(const VeryLongInt &a, const VeryLongInt &b) {
     return VeryLongInt(a) -= b;
 }
 
+ /**
+  * @info Zwraca dluga liczbe bedaca wynikiem mnozenia dlugiej liczby a przez
+  * dluga liczbe b.
+  *
+  */
 const VeryLongInt operator*(const VeryLongInt &a, const VeryLongInt &b) {
     return VeryLongInt(a) *= b;
 }
 
+ /**
+  * @info Zwraca dluga liczbe bedaca wynikiem dzielenia dlugiej liczby a przez
+  * dluga liczbe b.
+  *
+  */
 const VeryLongInt operator/(const VeryLongInt &a, const VeryLongInt &b) {
     return VeryLongInt(a) /= b;
 }
 
+ /**
+  * @info Zwraca dluga liczbe bedaca reszta z dzielenia dlugiej liczby a przez
+  * dluga liczbe b.
+  *
+  */
 const VeryLongInt operator%(const VeryLongInt &a, const VeryLongInt &b) {
     return VeryLongInt(a) %= b;
 }
 
+ /**
+  * @info Zwraca wynik przesuniecia dlugiej liczby o i bitow w lewo, gdzie i 
+  * to wartosc zmiennej shift.
+  *
+  */
+const VeryLongInt VeryLongInt::operator<<(const unsigned int shift) const {
+    return VeryLongInt(*this) <<= shift;
+}
+ 
+  /**
+  * @info Zwraca wynik przesuniecia dlugiej liczby o i bitow w prawo, gdzie i 
+  * to wartosc zmiennej shift.
+  *
+  */
 const VeryLongInt VeryLongInt::operator>>(const unsigned int shift) const {
     return VeryLongInt(*this) >>= shift;
 }
 
-const VeryLongInt VeryLongInt::operator<<(const unsigned int shift) const {
-    return VeryLongInt(*this) <<= shift;
-}
-
+ /**
+  * @info Zwraca wynik porownania "==" dwoch dlugich liczb 
+  * i false, jesli choc jeden z argumentów jest NaN.
+  *
+  */
 bool operator==(const VeryLongInt &it, const VeryLongInt &other) {
     if (it.NaN || other.NaN)
         return false;
@@ -268,12 +372,22 @@ bool operator==(const VeryLongInt &it, const VeryLongInt &other) {
     }
 }
 
+ /**
+  * @info Zwraca wynik porownania "!=" dwoch dlugich liczb 
+  * i false, jesli choc jeden z argumentów jest NaN.
+  *
+  */
 bool operator!=(const VeryLongInt &it, const VeryLongInt &other) {
     if (it.NaN || other.NaN)
         return false;
     return !(it == other);
 }
 
+ /**
+  * @info Zwraca wynik porownania "<" dwoch dlugich liczb 
+  * i false, jesli choc jeden z argumentów jest NaN.
+  *
+  */
 bool operator<(const VeryLongInt &it, const VeryLongInt &other) {
     if (it.NaN || other.NaN)
         return false;
@@ -296,6 +410,11 @@ bool operator<(const VeryLongInt &it, const VeryLongInt &other) {
     return false;
 }
 
+ /**
+  * @info Zwraca wynik porownania ">" dwoch dlugich liczb 
+  * i false, jesli choc jeden z argumentów jest NaN.
+  *
+  */
 bool operator>(const VeryLongInt &it, const VeryLongInt &other) {
     if (it.NaN || other.NaN)
         return false;
@@ -305,22 +424,40 @@ bool operator>(const VeryLongInt &it, const VeryLongInt &other) {
         return (other < it);
 }
 
+ /**
+  * @info Zwraca wynik porownania "<=" dwoch dlugich liczb 
+  * i false, jesli choc jeden z argumentów jest NaN.
+  *
+  */
 bool operator<=(const VeryLongInt &it, const VeryLongInt &other) {
     if (it.NaN || other.NaN)
         return false;
     return !(it > other);
 }
 
+ /**
+  * @info Zwraca wynik porownania "=>" dwoch dlugich liczb 
+  * i false, jesli choc jeden z argumentów jest NaN.
+  *
+  */
 bool operator>=(const VeryLongInt &it, const VeryLongInt &other) {
     if (it.NaN || other.NaN)
         return false;
     return !(it < other);
 }
 
+ /**
+  * @info Zwraca false wtedy i tylko wtedy, gdy dluga liczba jest nieliczba.
+  *
+  */
 bool VeryLongInt::isValid() const {
     return !NaN;
 }
 
+ /**
+  * @info Zwraca liczbe cyfr w zapisie dwojkowym dlugiej liczby.
+  *
+  */
 size_t VeryLongInt::numberOfBinaryDigits() const {
     if (NaN)
         return 0;
@@ -333,12 +470,19 @@ size_t VeryLongInt::numberOfBinaryDigits() const {
     return res;
 }
 
+ /**
+  * @info Funkcja pomocnicza realizujaca mnozenie dlugiej liczby przez dwa.
+  *
+  */
 VeryLongInt& VeryLongInt::multiply_by_2() {
     (*this) += *this;
     return *this;
 }
 
-
+ /**
+  * @info Funkcja pomocnicza realizujaca dzielenie dlugiej liczby przez dwa.
+  *
+  */
 VeryLongInt& VeryLongInt::divide_by_2() {
     for (int i = digits.size() - 1; i >= 0; --i) {
         if (i > 0 && digits[i] % 2)
@@ -355,12 +499,22 @@ VeryLongInt& VeryLongInt::divide_by_2() {
     return *this;
 }
 
+ /**
+  * @info Funkcja pomocnicza zwaracajaca true, gdy dluga liczba jest podzielna
+  * przez dwa, false w przeciwnym przypadku.
+  *
+  */
 bool VeryLongInt::is_divisible_by_2() const {
     if (NaN)
         return false;
     return digits[0] % 2 == 0;
 }
 
+ /** 
+  * @info Funkcja pomocnicza do wypisywania dlugiej liczby w zapisie dziesietnym 
+  * na strumien os (NaN, jesli dluga liczba jest nieliczba).
+  *
+  */
 std::ostream &VeryLongInt::write(std::ostream &os) const {
     if (NaN)
         os << "NaN";
@@ -378,56 +532,4 @@ std::ostream &VeryLongInt::write(std::ostream &os) const {
     }
     return os;
 }
-
-    #include "very_long_int.h"
-    #include <iostream>
-    #include <cassert>
-    #include <cstdlib>
-    #include <ctime>
-
-    using namespace std;
-
-    const int MAXN = 9999999999999999999LL;
-    unsigned long long randRange(unsigned long long a, unsigned long long b)
-    {
-      return a+rand()%(b-a+1);
-    }
-
-    /*int main()
-    {
-        VeryLongInt p;
-        p = 42;
-        VeryLongInt c(nullptr);
-        cout << c.isValid();
-      srand(time(NULL));
-
-      int num_of_tests = 100000;
-      VeryLongInt x(210000000);
-      VeryLongInt y(38390241);
-      cout << x / y << "\n" <<210000000 / 38390241;
-      VeryLongInt a(5);
-      cout << a;
-        assert(5 == a);
-        assert(a == a);
-        assert( 5 <= a);
-        assert( a <= 5);
-        assert( a < 6);
-        assert(4 < a);
-        assert(6 != a);
-        assert(a != 6);
-      while (num_of_tests--) {
-        unsigned long long a = randRange(0, MAXN);
-        unsigned long long b = randRange(1, a);
-        VeryLongInt x = VeryLongInt(a);
-        VeryLongInt y = VeryLongInt(b);
-        std::cout << "a " << a << "\n";
-        std::cout << "b " << b << "\n";
-        //std::cout << "a/b" << a / b << "\n";
-        assert(x + y == VeryLongInt(a+b));
-        assert(x - y == VeryLongInt(a-b));
-        assert(x * y == VeryLongInt(a*b));
-        assert(x / y == VeryLongInt(a/b));
-        assert(x % y == VeryLongInt(a%b));
-     }
-    }*/
 
