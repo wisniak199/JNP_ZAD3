@@ -1,5 +1,3 @@
-//plik naglowkowy
-
 #ifndef VERYLONGINT_H_
 #define VERYLONGINT_H_
 
