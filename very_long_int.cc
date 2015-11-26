@@ -159,17 +159,6 @@ VeryLongInt& VeryLongInt::operator-=(const VeryLongInt &other) {
 }
 
  /**
-  * @info Funkcja pomocnicza - zeruje dluga liczbe.
-  *
-  */
-void VeryLongInt::clear() {
-    digits.clear();
-    digits.push_back(0);
-    NaN = false;
-    Zero = true;
-}
-
- /**
   * @info Mnozenie dlugiej liczby przez dluga liczbe. 
   * Mnozenie algorytmem rosyjskich chlopow.
   * 
@@ -267,7 +256,7 @@ VeryLongInt& VeryLongInt::operator%=(const VeryLongInt &other) {
 }
 
  /**
-  * @info Przesuniecie dlugiej liczby i bitów w lewo. Gdzie i to wartosc 
+  * @info Przesuniecie dlugiej liczby i bitów w lewo, gdzie i to wartosc 
   * zmiennej shift.
   * Realizowane przez mnozenie razy dwa i razy.
   *
@@ -279,7 +268,7 @@ VeryLongInt& VeryLongInt::operator<<=(const unsigned int shift) {
 }
 
  /**
-  * @info Przesuniecie dlugiej liczby i bitów w prawo. Gdzie i to wartosc 
+  * @info Przesuniecie dlugiej liczby i bitów w prawo, gdzie i to wartosc 
   * zmiennej shift.
   * Realizowane przez dzielenie przez dwa i razy.
   *
@@ -468,6 +457,17 @@ size_t VeryLongInt::numberOfBinaryDigits() const {
         x *= 2;
     }
     return res;
+}
+
+ /**
+  * @info Funkcja pomocnicza - zeruje dluga liczbe.
+  *
+  */
+void VeryLongInt::clear() {
+    digits.clear();
+    digits.push_back(0);
+    NaN = false;
+    Zero = true;
 }
 
  /**
